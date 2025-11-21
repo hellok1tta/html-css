@@ -1,0 +1,13 @@
+// Импорт всех компонентов
+@import 'variables';
+@import 'mixins';
+@import 'base';
+@import 'header';
+@import 'footer';
+@import 'components';
+
+// Импорт страниц
+@import 'home';
+@import 'about';
+@import 'catalog';
+@import 'contacts';

@@ -1,133 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Пекарня 'Вкусный уголок' - свежая выпечка, хлеб, пироги и десерты из натуральных ингредиентов">
     <title>Пекарня "Вкусный уголок" - Свежая выпечка с любовью</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="scss/main.css">
+</head>
 <body>
     <header>
         <div class="container">
             <div class="logo-container">
-                <a href="/" aria-label="Перейти на главную страницу пекарни 'Вкусный уголок'">
+                <a href="index.html" aria-label="Перейти на главную страницу пекарни 'Вкусный уголок'">
                     <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
                 </a>
                 <h1>Пекарня "Вкусный уголок"</h1>
             </div>
             
-            <!-- Основная навигация -->
-            <nav aria-label="Основное меню">
+            <nav class="main-nav" aria-label="Основное меню">
                 <ul>
-                    <li><a href="#">Главная</a></li>
-                    <li><a href="#">О нас</a></li>
-                    <li><a href="#">Ассортимент</a></li>
-                    <li><a href="#">Новинки</a></li>
-                    <li><a href="#">Акции</a></li>
-                    <li><a href="#">Контакты</a></li>
-                    <li><a href="#">Корзина</a></li>
+                    <li><a href="index.html" class="active">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="#" class="cart-link">Корзина <span class="cart-count">0</span></a></li>
                 </ul>
             </nav>
+            
+            <button class="mobile-menu-btn" aria-label="Открыть меню">☰</button>
         </div>
     </header>
 
-    <!-- Основное содержимое -->
     <main>
-        <!-- Герой-секция -->
-        <section id="hero" aria-labelledby="hero-heading">
+        <section class="hero">
             <div class="container">
-                <h2 id="hero-heading">Добро пожаловать в нашу пекарню!</h2>
-                <p>Мы печем с любовью с 2010 года</p>
-                <button>Сделать заказ</button>
+                <h2>Добро пожаловать в нашу пекарню!</h2>
+                <p>Мы печем с любовью с 2010 года. Свежая выпечка из натуральных ингредиентов ежедневно.</p>
+                <a href="catalog.html" class="btn btn-primary">Сделать заказ</a>
             </div>
         </section>
 
-        <!-- Секция категорий продукции -->
+        <section class="features">
+            <div class="container">
+                <h2>Почему выбирают нас</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🍞</div>
+                        <h3>Свежая выпечка</h3>
+                        <p>Готовим ежедневно из самых свежих ингредиентов без консервантов</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌾</div>
+                        <h3>Натуральные продукты</h3>
+                        <p>Используем только экологически чистые муку, масло и другие продукты</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">👨‍🍳</div>
+                        <h3>Опытные пекари</h3>
+                        <p>Наши специалисты с многолетним опытом создают настоящие шедевры</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section aria-labelledby="products-heading">
             <div class="container">
                 <h2 id="products-heading">Наша продукция</h2>
                 <div class="products-grid">
-                    <article>
-                        <img src="#" alt="Различные виды свежего хлеба">
-                        <h3>Хлеб</h3>
-                        <p>Свежий хлеб из натуральных ингредиентов</p>
-                        <button>Подробнее</button>
+                    <article class="card">
+                        <div class="card-image">🥖</div>
+                        <div class="card-body">
+                            <h3 class="card-title">Хлеб</h3>
+                            <p class="card-text">Свежий хлеб из натуральных ингредиентов по традиционным рецептам</p>
+                            <a href="catalog.html?category=bread" class="btn btn-secondary">Подробнее</a>
+                        </div>
                     </article>
-                    <article>
-                        <img src="#" alt="Ароматные домашние пироги">
-                        <h3>Пироги</h3>
-                        <p>Ароматные пироги с различными начинками</p>
-                        <button>Подробнее</button>
+                    <article class="card">
+                        <div class="card-image">🥧</div>
+                        <div class="card-body">
+                            <h3 class="card-title">Пироги</h3>
+                            <p class="card-text">Ароматные пироги с различными начинками для всей семьи</p>
+                            <a href="catalog.html?category=pies" class="btn btn-secondary">Подробнее</a>
+                        </div>
                     </article>
-                    <article>
-                        <img src="#" alt="Вкусные десерты и сладости">
-                        <h3>Десерты</h3>
-                        <p>Вкуснейшие десерты для настоящих сладкоежек</p>
-                        <button>Подробнее</button>
+                    <article class="card">
+                        <div class="card-image">🍰</div>
+                        <div class="card-body">
+                            <h3 class="card-title">Десерты</h3>
+                            <p class="card-text">Вкуснейшие десерты для настоящих сладкоежек</p>
+                            <a href="catalog.html?category=desserts" class="btn btn-secondary">Подробнее</a>
+                        </div>
                     </article>
-                    <article>
-                        <img src="#" alt="Праздничные торты на заказ">
-                        <h3>Торты на заказ</h3>
-                        <p>Праздничные и свадебные торты по вашему вкусу</p>
-                        <button>Подробнее</button>
+                    <article class="card">
+                        <div class="card-image">🎂</div>
+                        <div class="card-body">
+                            <h3 class="card-title">Торты на заказ</h3>
+                            <p class="card-text">Праздничные и свадебные торты по вашему вкусу</p>
+                            <a href="catalog.html?category=cakes" class="btn btn-secondary">Подробнее</a>
+                        </div>
                     </article>
                 </div>
             </div>
         </section>
 
-        <!-- Секция популярных товаров -->
+        <section class="promotions">
+            <div class="container">
+                <div class="promotion-banner">
+                    <h3>Скидка 20% на первый заказ!</h3>
+                    <p>При заказе от 1000 рублей получите скидку 20% по промокоду: WELCOME20</p>
+                    <a href="catalog.html" class="btn">Воспользоваться акцией</a>
+                </div>
+            </div>
+        </section>
+
         <section aria-labelledby="popular-heading">
             <div class="container">
                 <h2 id="popular-heading">Популярные товары</h2>
                 <div class="popular-grid">
-                    <figure>
-                        <img src="#" alt="Свежий ржаной хлеб">
-                        <figcaption>
-                            <h3>Ржаной хлеб</h3>
-                            <p>150 руб.</p>
-                            <button>В корзину</button>
+                    <figure class="card">
+                        <div class="card-image">🥖</div>
+                        <figcaption class="card-body">
+                            <h3 class="card-title">Ржаной хлеб</h3>
+                            <p class="card-text">Традиционный ржаной хлеб с хрустящей корочкой</p>
+                            <div class="card-price">150 руб.</div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-block" data-product="Ржаной хлеб" data-price="150">В корзину</button>
+                            </div>
                         </figcaption>
                     </figure>
-                    <figure>
-                        <img src="#" alt="Свежий круассан с шоколадом">
-                        <figcaption>
-                            <h3>Круассан с шоколадом</h3>
-                            <p>120 руб.</p>
-                            <button>В корзину</button>
+                    <figure class="card">
+                        <div class="card-image">🥐</div>
+                        <figcaption class="card-body">
+                            <h3 class="card-title">Круассан с шоколадом</h3>
+                            <p class="card-text">Слоеный круассан с начинкой из бельгийского шоколада</p>
+                            <div class="card-price">120 руб.</div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-block" data-product="Круассан с шоколадом" data-price="120">В корзину</button>
+                            </div>
                         </figcaption>
                     </figure>
-                    <figure>
-                        <img src="#" alt="Домашний пирог с яблоками">
-                        <figcaption>
-                            <h3>Пирог с яблоками</h3>
-                            <p>350 руб.</p>
-                            <button>В корзину</button>
+                    <figure class="card">
+                        <div class="card-image">🍎</div>
+                        <figcaption class="card-body">
+                            <h3 class="card-title">Пирог с яблоками</h3>
+                            <p class="card-text">Домашний пирог с яблочной начинкой и корицей</p>
+                            <div class="card-price">350 руб.</div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-block" data-product="Пирог с яблоками" data-price="350">В корзину</button>
+                            </div>
                         </figcaption>
                     </figure>
-                    <figure>
-                        <img src="#" alt="Набор из четырех эклеров">
-                        <figcaption>
-                            <h3>Эклеры (4 шт.)</h3>
-                            <p>280 руб.</p>
-                            <button>В корзину</button>
+                    <figure class="card">
+                        <div class="card-image">🧁</div>
+                        <figcaption class="card-body">
+                            <h3 class="card-title">Эклеры (4 шт.)</h3>
+                            <p class="card-text">Набор из четырех эклеров с разными начинками</p>
+                            <div class="card-price">280 руб.</div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-block" data-product="Эклеры (4 шт.)" data-price="280">В корзину</button>
+                            </div>
                         </figcaption>
                     </figure>
                 </div>
             </div>
         </section>
 
-        <!-- Секция о компании -->
         <section id="about" aria-labelledby="about-heading">
             <div class="container">
                 <h2 id="about-heading">О нашей пекарне</h2>
                 <div class="about-content">
                     <div class="about-text">
-                        <p>Мы используем только натуральные ингредиенты и традиционные рецепты</p>
+                        <p>Мы используем только натуральные ингредиенты и традиционные рецепты, передающиеся из поколения в поколение.</p>
                         <ul>
                             <li>Свежая выпечка ежедневно</li>
                             <li>Без консервантов и искусственных добавок</li>
                             <li>Собственное производство</li>
                             <li>Доставка по городу</li>
+                            <li>Экологичная упаковка</li>
+                            <li>Доступные цены</li>
                         </ul>
+                        <a href="about.html" class="btn btn-primary">Узнать больше о нас</a>
                     </div>
                     <div class="about-image">
                         <img src="#" alt="Интерьер нашей пекарни">
@@ -136,93 +188,85 @@
             </div>
         </section>
 
-        <!-- Секция отзывов -->
         <section aria-labelledby="reviews-heading">
             <div class="container">
                 <h2 id="reviews-heading">Отзывы наших клиентов</h2>
-                <div class="reviews-container">
-                    <blockquote>
-                        <p>Лучший хлеб в городе! Покупаю здесь каждую неделю.</p>
-                        <footer>
-                            <cite>Мария Иванова</cite>
-                        </footer>
+                <div class="reviews-grid">
+                    <blockquote class="card">
+                        <div class="card-body">
+                            <p>"Лучший хлеб в городе! Покупаю здесь каждую неделю. Особенно нравится ржаной хлеб - ароматный и с хрустящей корочкой."</p>
+                            <footer>
+                                <cite>Мария Иванова</cite>
+                            </footer>
+                        </div>
                     </blockquote>
-                    <blockquote>
-                        <p>Заказывали торт на день рождения - все были в восторге!</p>
-                        <footer>
-                            <cite>Сергей Петров</cite>
-                        </footer>
+                    <blockquote class="card">
+                        <div class="card-body">
+                            <p>"Заказывали торт на день рождения - все были в восторге! Красивый, вкусный и по доступной цене. Обязательно будем заказывать еще."</p>
+                            <footer>
+                                <cite>Сергей Петров</cite>
+                            </footer>
+                        </div>
                     </blockquote>
-                    <blockquote>
-                        <p>Атмосферное место и потрясающая выпечка. Рекомендую!</p>
-                        <footer>
-                            <cite>Анна Сидорова</cite>
-                        </footer>
+                    <blockquote class="card">
+                        <div class="card-body">
+                            <p>"Атмосферное место и потрясающая выпечка. Люблю заходить утром за свежим круассаном и кофе. Рекомендую всем!"</p>
+                            <footer>
+                                <cite>Анна Сидорова</cite>
+                            </footer>
+                        </div>
                     </blockquote>
                 </div>
             </div>
         </section>
 
-        <!-- Секция контактов -->
-        <section aria-labelledby="contacts-heading">
+        <section class="contact-preview">
             <div class="container">
-                <h2 id="contacts-heading">Контакты</h2>
-                <div class="contact-content">
-                    <address>
-                        <h3>Адрес</h3>
-                        <p>г. Москва, ул. Пушкина, д. 10</p>
-                        <h3>Телефон</h3>
-                        <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
-                        <h3>Время работы</h3>
-                        <p>Пн-Пт: 8:00-20:00<br>Сб-Вс: 9:00-18:00</p>
-                    </address>
-                    <div>
-                        <h3>Форма обратной связи</h3>
-                        <form>
-                            <label for="name">Ваше имя</label>
-                            <input type="text" id="name" placeholder="Ваше имя">
-                            
-                            <label for="email">Ваш email</label>
-                    <input type="email" id="email" placeholder="Ваш email">
-                            
-                            <label for="message">Ваше сообщение</label>
-                            <textarea id="message" placeholder="Ваше сообщение"></textarea>
-                            
-                            <button type="submit">Отправить</button>
-                        </form>
+                <div class="contact-preview-content">
+                    <div class="contact-info">
+                        <h2>Готовы попробовать нашу выпечку?</h2>
+                        <p>Приходите к нам или заказывайте доставку</p>
+                        <div class="contact-details">
+                            <p><strong>Адрес:</strong> г. Москва, ул. Пушкина, д. 10</p>
+                            <p><strong>Телефон:</strong> <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                            <p><strong>Время работы:</strong> Пн-Пт: 8:00-20:00, Сб-Вс: 9:00-18:00</p>
+                        </div>
+                    </div>
+                    <div class="contact-action">
+                        <a href="contacts.html" class="btn btn-primary">Связаться с нами</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Подвал сайта -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
                     <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
                     <p>Пекарня "Вкусный уголок"</p>
+                    <p>Свежая выпечка с любовью с 2010 года</p>
                 </div>
                 
-                <!-- Навигация в подвале -->
-                <nav aria-label="Дополнительное меню">
+                <nav class="footer-nav" aria-label="Дополнительное меню">
                     <h4>Меню</h4>
                     <ul>
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">О нас</a></li>
-                        <li><a href="#">Ассортимент</a></li>
-                        <li><a href="#">Контакты</a></li>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="catalog.html">Каталог</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
                     </ul>
                 </nav>
                 
-                <address>
+                <address class="footer-contact">
                     <h4>Контакты</h4>
                     <p>г. Москва, ул. Пушкина, д. 10</p>
                     <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                    <p><a href="mailto:info@vkusniy-ugolok.ru">info@vkusniy-ugolok.ru</a></p>
                 </address>
                 
-                <div>
+                <div class="footer-social">
                     <h4>Мы в соцсетях</h4>
                     <ul>
                         <li><a href="#" aria-label="Наш Instagram">Instagram</a></li>
@@ -232,6 +276,11 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2023 Пекарня "Вкусный уголок". Все права защищены.</p>
+                <p>&copy; 2023 Пекарня "Вкусный уголок". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
