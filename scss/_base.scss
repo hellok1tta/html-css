@@ -1,0 +1,128 @@
+// Базовые сбросы и стили
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-main;
+  line-height: 1.6;
+  color: $text;
+  background-color: $light;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: $transition;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: $transition;
+  
+  &:focus {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+}
+
+// Контейнер
+.container {
+  width: 90%;
+  max-width: $container-width;
+  margin: 0 auto;
+  
+  @include mobile {
+    width: 95%;
+  }
+}
+
+// Секции
+section {
+  padding: 5rem 0;
+  
+  @include mobile {
+    padding: 3rem 0;
+  }
+}
+
+// Типография
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: $dark;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 2rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  
+  &::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: $accent;
+    margin: 0.5rem auto;
+  }
+}
+
+p {
+  margin-bottom: 1rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Утилиты
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

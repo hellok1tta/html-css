@@ -1,0 +1,247 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Пекарня "Вкусный уголок"</title>
+    <link rel="stylesheet" href="scss/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" aria-label="Перейти на главную страницу">
+                    <div class="logo-img">🍞</div>
+                </a>
+                <h1>Пекарня "Вкусный уголок"</h1>
+            </div>
+            
+            <nav class="main-nav" aria-label="Основное меню">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="dashboard.html" class="active">Личный кабинет</a></li>
+                    <li><a href="#" class="cart-link">Корзина <span class="cart-count">0</span></a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn" aria-label="Открыть меню">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="dashboard-hero">
+            <div class="container">
+                <h1>Личный кабинет</h1>
+                <p>Управляйте своими заказами и отслеживайте статистику</p>
+            </div>
+        </section>
+
+        <section class="user-info">
+            <div class="container">
+                <div class="user-card">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <h2>Иван Иванов</h2>
+                        <p>ivan@example.com</p>
+                        <p class="member-since">Участник с января 2024</p>
+                    </div>
+                    <button class="btn btn-outline" id="logout-btn">Выйти</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-stats">
+            <div class="container">
+                <h2>Статистика заказов</h2>
+                <div class="stats-grid">
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <h3>Всего заказов</h3>
+                            <div class="stat-number">12</div>
+                            <div class="stat-change positive">+2 за месяц</div>
+                        </div>
+                    </div>
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>Общая сумма</h3>
+                            <div class="stat-number">8,540 ₽</div>
+                            <div class="stat-change positive">+1,200 ₽</div>
+                        </div>
+                    </div>
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <h3>Средний чек</h3>
+                            <div class="stat-number">712 ₽</div>
+                            <div class="stat-change positive">+5%</div>
+                        </div>
+                    </div>
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">🎂</div>
+                        <div class="stat-content">
+                            <h3>Любимый товар</h3>
+                            <div class="stat-number">Круассан</div>
+                            <div class="stat-change">5 покупок</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <div class="container">
+                <div class="charts-grid">
+                    <div class="chart-card fade-in-up">
+                        <h3>Заказы по месяцам</h3>
+                        <canvas id="ordersChart"></canvas>
+                    </div>
+                    <div class="chart-card fade-in-up">
+                        <h3>Популярные категории</h3>
+                        <canvas id="categoriesChart"></canvas>
+                    </div>
+                    <div class="chart-card fade-in-up">
+                        <h3>Активность заказов</h3>
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                    <div class="chart-card fade-in-up">
+                        <h3>Статусы заказов</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="orders-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>История заказов</h2>
+                    <div class="filter-controls">
+                        <select id="statusFilter" class="form-control">
+                            <option value="all">Все статусы</option>
+                            <option value="completed">Завершенные</option>
+                            <option value="processing">В обработке</option>
+                            <option value="delivery">Доставка</option>
+                            <option value="cancelled">Отмененные</option>
+                        </select>
+                        <select id="sortOrders" class="form-control">
+                            <option value="newest">Сначала новые</option>
+                            <option value="oldest">Сначала старые</option>
+                            <option value="price-high">По сумме (убыв.)</option>
+                            <option value="price-low">По сумме (возр.)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="orders-table-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="date">Дата</th>
+                                <th data-sort="id">№ Заказа</th>
+                                <th>Товары</th>
+                                <th data-sort="amount">Сумма</th>
+                                <th data-sort="status">Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Данные загружаются через JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <button class="page-link prev" disabled>‹</button>
+                    <button class="page-link active">1</button>
+                    <button class="page-link">2</button>
+                    <button class="page-link">3</button>
+                    <button class="page-link next">›</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-actions">
+            <div class="container">
+                <h2>Быстрые действия</h2>
+                <div class="actions-grid">
+                    <div class="action-card fade-in-up">
+                        <div class="action-icon">🔄</div>
+                        <h3>Повторить заказ</h3>
+                        <p>Быстро заказать предыдущие покупки</p>
+                        <button class="btn btn-outline">Выбрать</button>
+                    </div>
+                    <div class="action-card fade-in-up">
+                        <div class="action-icon">❤️</div>
+                        <h3>Избранное</h3>
+                        <p>Ваши любимые товары</p>
+                        <button class="btn btn-outline">Просмотреть</button>
+                    </div>
+                    <div class="action-card fade-in-up">
+                        <div class="action-icon">📝</div>
+                        <h3>Написать отзыв</h3>
+                        <p>Поделитесь вашим мнением</p>
+                        <button class="btn btn-outline">Оставить отзыв</button>
+                    </div>
+                    <div class="action-card fade-in-up">
+                        <div class="action-icon">⚙️</div>
+                        <h3>Настройки</h3>
+                        <p>Управление профилем</p>
+                        <button class="btn btn-outline">Настроить</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-img">🍞</div>
+                    <p>Пекарня "Вкусный уголок"</p>
+                    <p>Свежая выпечка с любовью с 2010 года</p>
+                </div>
+                
+                <nav class="footer-nav" aria-label="Дополнительное меню">
+                    <h4>Меню</h4>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="catalog.html">Каталог</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                    </ul>
+                </nav>
+                
+                <address class="footer-contact">
+                    <h4>Контакты</h4>
+                    <p>г. Москва, ул. Пушкина, д. 10</p>
+                    <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                    <p><a href="mailto:info@vkusniy-ugolok.ru">info@vkusniy-ugolok.ru</a></p>
+                </address>
+                
+                <div class="footer-social">
+                    <h4>Мы в соцсетях</h4>
+                    <ul>
+                        <li><a href="#" aria-label="Наш Instagram">Instagram</a></li>
+                        <li><a href="#" aria-label="Наша страница ВКонтакте">VKontakte</a></li>
+                        <li><a href="#" aria-label="Наша страница Facebook">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Пекарня "Вкусный уголок". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/dashboard.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
