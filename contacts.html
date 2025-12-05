@@ -12,7 +12,9 @@
         <div class="container">
             <div class="logo-container">
                 <a href="index.html" aria-label="Перейти на главную страницу">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
                 </a>
                 <h1>Пекарня "Вкусный уголок"</h1>
             </div>
@@ -23,6 +25,8 @@
                     <li><a href="about.html">О нас</a></li>
                     <li><a href="catalog.html">Каталог</a></li>
                     <li><a href="contacts.html" class="active">Контакты</a></li>
+                    <li><a href="login.html">Вход</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
                     <li><a href="#" class="cart-link">Корзина <span class="cart-count">0</span></a></li>
                 </ul>
             </nav>
@@ -41,16 +45,20 @@
 
         <section class="contact-info">
             <div class="container">
+                <h2>Наши магазины</h2>
+                <div class="shops-grid" id="shops-container">
+                    <!-- Магазины будут загружены через JavaScript -->
+                    <div class="loading">Загрузка информации о магазинах...</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-form-section">
+            <div class="container">
                 <div class="contact-grid">
                     <div class="contact-details">
-                        <h2>Наши контакты</h2>
+                        <h2>Свяжитесь с нами</h2>
                         
-                        <div class="contact-item">
-                            <h3>📍 Адрес</h3>
-                            <p>г. Москва, ул. Пушкина, д. 10</p>
-                            <p class="contact-note">Метро "Тверская", 5 минут пешком</p>
-                        </div>
-
                         <div class="contact-item">
                             <h3>📞 Телефоны</h3>
                             <p><a href="tel:+74951234567">+7 (495) 123-45-67</a> - основной</p>
@@ -61,6 +69,12 @@
                             <h3>✉️ Email</h3>
                             <p><a href="mailto:info@vkusniy-ugolok.ru">info@vkusniy-ugolok.ru</a> - общие вопросы</p>
                             <p><a href="mailto:orders@vkusniy-ugolok.ru">orders@vkusniy-ugolok.ru</a> - заказы</p>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>🚚 Доставка</h3>
+                            <p>Бесплатная доставка при заказе от 1000 рублей в пределах МКАД</p>
+                            <p>Стоимость доставки за МКАД уточняйте у оператора</p>
                         </div>
 
                         <div class="contact-item working-hours">
@@ -80,17 +94,11 @@
                                 </tr>
                             </table>
                         </div>
-
-                        <div class="contact-item">
-                            <h3>🚚 Доставка</h3>
-                            <p>Бесплатная доставка при заказе от 1000 рублей в пределах МКАД</p>
-                            <p>Стоимость доставки за МКАД уточняйте у оператора</p>
-                        </div>
                     </div>
 
                     <div class="contact-form-container">
                         <h2>Форма обратной связи</h2>
-                        <form class="contact-form">
+                        <form class="contact-form" id="contactForm">
                             <div class="form-group">
                                 <label for="name" class="form-label">Ваше имя *</label>
                                 <input type="text" id="name" class="form-control" placeholder="Иван Иванов" required>
@@ -138,23 +146,6 @@
             </div>
         </section>
 
-        <section class="map-section">
-            <div class="container">
-                <h2>Мы на карте</h2>
-                <div class="map-placeholder">
-                    <div class="map-fallback">
-                        <h3>г. Москва, ул. Пушкина, д. 10</h3>
-                        <p>Метро "Тверская", выход №4</p>
-                        <p>5 минут пешком от метро</p>
-                        <div class="map-directions">
-                            <a href="https://yandex.ru/maps" class="btn btn-secondary" target="_blank">Открыть в Яндекс.Картах</a>
-                            <a href="https://maps.google.com" class="btn btn-secondary" target="_blank">Открыть в Google Maps</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section class="faq-section">
             <div class="container">
                 <h2>Часто задаваемые вопросы</h2>
@@ -184,7 +175,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">🍞</div>
                     <p>Пекарня "Вкусный уголок"</p>
                     <p>Свежая выпечка с любовью с 2010 года</p>
                 </div>
@@ -221,6 +212,40 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+<script>
+    // Загрузка магазинов
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadShops();
+    });
+
+    async function loadShops() {
+        const container = document.getElementById('shops-container');
+        
+        try {
+            const response = await fetch('/api/shops');
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                container.innerHTML = result.data.map(shop => `
+                    <div class="contact-item">
+                        <h3>📍 Адрес</h3>
+                        <p>${shop.address}</p>
+                        ${shop.phone ? `<p><strong>Телефон:</strong> <a href="tel:${shop.phone}">${shop.phone}</a></p>` : ''}
+                        ${shop.email ? `<p><strong>Email:</strong> <a href="mailto:${shop.email}">${shop.email}</a></p>` : ''}
+                        ${shop.working_hours ? `<p><strong>Часы работы:</strong> ${shop.working_hours}</p>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p>Информация о магазинах скоро появится</p>';
+            }
+        } catch (error) {
+            console.error('Error loading shops:', error);
+            container.innerHTML = '<p class="error">Не удалось загрузить информацию о магазинах</p>';
+        }
+    }
+</script>
 </body>
 </html>

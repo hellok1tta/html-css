@@ -3,61 +3,21 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const Database = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+// Serve static files from the parent directory (where HTML files are)
+app.use(express.static(path.join(__dirname, '..')));
 
 // Инициализация базы данных
-const db = new sqlite3.Database(':memory:');
-
-// Создание таблиц
-db.serialize(() => {
-    // Таблица пользователей
-    db.run(`CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        name TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-
-    // Таблица заказов
-    db.run(`CREATE TABLE orders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        items TEXT NOT NULL,
-        total_amount REAL NOT NULL,
-        status TEXT DEFAULT 'processing',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users (id)
-    )`);
-
-    // Создание тестового пользователя
-    const hashedPassword = bcrypt.hashSync('password123', 10);
-    db.run(`INSERT INTO users (email, password, name) VALUES (?, ?, ?)`, 
-        ['test@example.com', hashedPassword, 'Тестовый Пользователь']);
-
-    // Создание тестовых заказов
-    const orders = [
-        { user_id: 1, items: 'Ржаной хлеб, Круассан с шоколадом', total_amount: 270, status: 'completed' },
-        { user_id: 1, items: 'Пирог с яблоками, Эклеры (4 шт.)', total_amount: 630, status: 'delivery' },
-        { user_id: 1, items: 'Багет французский, Тирамису', total_amount: 410, status: 'processing' }
-    ];
-
-    const stmt = db.prepare(`INSERT INTO orders (user_id, items, total_amount, status) VALUES (?, ?, ?, ?)`);
-    orders.forEach(order => {
-        stmt.run(order.user_id, order.items, order.total_amount, order.status);
-    });
-    stmt.finalize();
-});
+const db = new Database();
 
 // Middleware для проверки JWT токена
 const authenticateToken = (req, res, next) => {
@@ -77,199 +37,327 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// Маршруты аутентификации
+// Основной маршрут для тестирования
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
+});
+
+// API Routes
 app.post('/api/register', async (req, res) => {
     try {
         const { email, password, name } = req.body;
 
         if (!email || !password || !name) {
-            return res.status(400).json({ error: 'Все поля обязательны для заполнения' });
+            return res.status(400).json({ 
+                success: false,
+                error: 'Все поля обязательны для заполнения' 
+            });
         }
 
-        // Проверка существования пользователя
-        db.get('SELECT id FROM users WHERE email = ?', [email], async (err, row) => {
-            if (err) {
-                return res.status(500).json({ error: 'Ошибка сервера' });
-            }
+        // Хеширование пароля
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        try {
+            const result = await db.register({
+                name,
+                email,
+                password: hashedPassword
+            });
 
-            if (row) {
-                return res.status(400).json({ error: 'Пользователь с таким email уже существует' });
-            }
+            const token = jwt.sign({ 
+                id: result.id, 
+                email: result.email,
+                name: result.name 
+            }, JWT_SECRET, { expiresIn: '24h' });
 
-            // Хеширование пароля и создание пользователя
-            const hashedPassword = await bcrypt.hash(password, 10);
-            db.run('INSERT INTO users (email, password, name) VALUES (?, ?, ?)', 
-                [email, hashedPassword, name], 
-                function(err) {
-                    if (err) {
-                        return res.status(500).json({ error: 'Ошибка при создании пользователя' });
-                    }
-
-                    const token = jwt.sign({ id: this.lastID, email }, JWT_SECRET);
-                    res.json({ 
-                        message: 'Пользователь успешно зарегистрирован',
-                        token,
-                        user: { id: this.lastID, email, name }
-                    });
+            res.json({
+                success: true,
+                message: 'Пользователь успешно зарегистрирован',
+                token,
+                user: {
+                    id: result.id,
+                    name: result.name,
+                    email: result.email
                 }
-            );
-        });
+            });
+        } catch (error) {
+            res.status(400).json({ 
+                success: false,
+                error: error.message 
+            });
+        }
     } catch (error) {
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+        res.status(500).json({ 
+            success: false,
+            error: 'Внутренняя ошибка сервера' 
+        });
     }
 });
 
-app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email и пароль обязательны' });
-    }
-
-    db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
-        if (err) {
-            return res.status(500).json({ error: 'Ошибка сервера' });
+        if (!email || !password) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Email и пароль обязательны' 
+            });
         }
 
-        if (!user) {
-            return res.status(400).json({ error: 'Неверный email или пароль' });
-        }
+        // Получаем пользователя по email
+        const user = await db.login({ email, password });
 
+        // Проверяем пароль
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-            return res.status(400).json({ error: 'Неверный email или пароль' });
+            return res.status(400).json({ 
+                success: false,
+                error: 'Неверный email или пароль' 
+            });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+        const token = jwt.sign({ 
+            id: user.id, 
+            email: user.email,
+            name: user.name 
+        }, JWT_SECRET, { expiresIn: '24h' });
+
         res.json({
+            success: true,
             message: 'Успешный вход в систему',
             token,
-            user: { id: user.id, email: user.email, name: user.name }
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                created_at: user.created_at
+            }
         });
+    } catch (error) {
+        res.status(400).json({ 
+            success: false,
+            error: error.message 
+        });
+    }
+});
+
+// Маршруты для продуктов
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await db.getAllProducts();
+        res.json({
+            success: true,
+            data: products
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+app.get('/api/products/popular', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 4;
+        const products = await db.getPopularProducts(limit);
+        res.json({
+            success: true,
+            data: products
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        const product = await db.getProductById(req.params.id);
+        res.json({
+            success: true,
+            data: product
+        });
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Маршруты для сотрудников
+app.get('/api/team', async (req, res) => {
+    try {
+        const employees = await db.getAllEmployees();
+        res.json({
+            success: true,
+            data: employees
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Маршруты для магазинов
+app.get('/api/shops', async (req, res) => {
+    try {
+        const shops = await db.getAllShops();
+        res.json({
+            success: true,
+            data: shops
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Маршрут для проверки аутентификации
+app.get('/api/auth/check', authenticateToken, (req, res) => {
+    res.json({
+        success: true,
+        user: {
+            id: req.user.id,
+            name: req.user.name,
+            email: req.user.email
+        }
     });
 });
 
-// Маршруты для заказов
-app.get('/api/orders', authenticateToken, (req, res) => {
-    db.all('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', 
-        [req.user.id], 
-        (err, rows) => {
-            if (err) {
-                return res.status(500).json({ error: 'Ошибка при получении заказов' });
-            }
-            res.json(rows);
-        }
-    );
-});
-
-app.get('/api/orders/:id', authenticateToken, (req, res) => {
-    db.get('SELECT * FROM orders WHERE id = ? AND user_id = ?', 
-        [req.params.id, req.user.id], 
-        (err, row) => {
-            if (err) {
-                return res.status(500).json({ error: 'Ошибка при получении заказа' });
-            }
-            if (!row) {
-                return res.status(404).json({ error: 'Заказ не найден' });
-            }
-            res.json(row);
-        }
-    );
-});
-
-app.post('/api/orders', authenticateToken, (req, res) => {
-    const { items, total_amount } = req.body;
-
-    if (!items || !total_amount) {
-        return res.status(400).json({ error: 'Товары и общая сумма обязательны' });
+// Маршруты для заказов пользователя
+app.get('/api/user/orders', authenticateToken, async (req, res) => {
+    try {
+        const orders = await db.getUserOrders(req.user.id);
+        res.json({
+            success: true,
+            data: orders
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
     }
-
-    db.run('INSERT INTO orders (user_id, items, total_amount) VALUES (?, ?, ?)',
-        [req.user.id, JSON.stringify(items), total_amount],
-        function(err) {
-            if (err) {
-                return res.status(500).json({ error: 'Ошибка при создании заказа' });
-            }
-            res.json({ 
-                message: 'Заказ успешно создан',
-                orderId: this.lastID 
-            });
-        }
-    );
-});
-
-app.put('/api/orders/:id', authenticateToken, (req, res) => {
-    const { status } = req.body;
-
-    db.run('UPDATE orders SET status = ? WHERE id = ? AND user_id = ?',
-        [status, req.params.id, req.user.id],
-        function(err) {
-            if (err) {
-                return res.status(500).json({ error: 'Ошибка при обновлении заказа' });
-            }
-            if (this.changes === 0) {
-                return res.status(404).json({ error: 'Заказ не найден' });
-            }
-            res.json({ message: 'Заказ успешно обновлен' });
-        }
-    );
-});
-
-app.delete('/api/orders/:id', authenticateToken, (req, res) => {
-    db.run('DELETE FROM orders WHERE id = ? AND user_id = ?',
-        [req.params.id, req.user.id],
-        function(err) {
-            if (err) {
-                return res.status(500).json({ error: 'Ошибка при удалении заказа' });
-            }
-            if (this.changes === 0) {
-                return res.status(404).json({ error: 'Заказ не найден' });
-            }
-            res.json({ message: 'Заказ успешно удален' });
-        }
-    );
 });
 
 // Статистика пользователя
-app.get('/api/stats', authenticateToken, (req, res) => {
-    const stats = {};
+app.get('/api/user/stats', authenticateToken, async (req, res) => {
+    try {
+        const stats = await db.getUserStats(req.user.id);
+        res.json({
+            success: true,
+            data: stats
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
 
-    // Общее количество заказов
-    db.get('SELECT COUNT(*) as count FROM orders WHERE user_id = ?', 
-        [req.user.id], 
-        (err, row) => {
-            if (err) return res.status(500).json({ error: 'Ошибка сервера' });
-            stats.totalOrders = row.count;
+// Создание заказа
+app.post('/api/orders', authenticateToken, async (req, res) => {
+    try {
+        const { items, total_amount } = req.body;
 
-            // Общая сумма заказов
-            db.get('SELECT SUM(total_amount) as total FROM orders WHERE user_id = ?', 
-                [req.user.id], 
-                (err, row) => {
-                    if (err) return res.status(500).json({ error: 'Ошибка сервера' });
-                    stats.totalAmount = row.total || 0;
-
-                    // Средний чек
-                    stats.averageOrder = stats.totalOrders > 0 ? stats.totalAmount / stats.totalOrders : 0;
-
-                    // Статистика по статусам
-                    db.all('SELECT status, COUNT(*) as count FROM orders WHERE user_id = ? GROUP BY status',
-                        [req.user.id],
-                        (err, rows) => {
-                            if (err) return res.status(500).json({ error: 'Ошибка сервера' });
-                            stats.statusStats = rows;
-                            res.json(stats);
-                        }
-                    );
-                }
-            );
+        if (!items || !total_amount) {
+            return res.status(400).json({ 
+                success: false,
+                error: 'Товары и общая сумма обязательны' 
+            });
         }
-    );
+
+        const result = await db.createOrder({
+            user_id: req.user.id,
+            items: JSON.stringify(items),
+            total_amount
+        });
+
+        res.json({
+            success: true,
+            message: 'Заказ успешно создан',
+            orderId: result.id
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Catch-all route for HTML pages
+app.get('*', (req, res) => {
+    // Check if the request is for an HTML page
+    if (req.url.includes('.html') || !req.url.includes('.')) {
+        const filePath = path.join(__dirname, '..', req.url === '/' ? 'index.html' : req.url);
+        res.sendFile(filePath, (err) => {
+            if (err) {
+                // If file doesn't exist, send 404
+                res.status(404).send(`
+                    <html>
+                        <head>
+                            <title>Страница не найдена</title>
+                            <style>
+                                body { 
+                                    font-family: Arial, sans-serif; 
+                                    text-align: center; 
+                                    padding: 50px; 
+                                    background: #f8e1c4;
+                                }
+                                h1 { color: #9c6644; }
+                                a { 
+                                    color: #9c6644; 
+                                    text-decoration: none;
+                                    font-weight: bold;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>404 - Страница не найдена</h1>
+                            <p>Извините, запрашиваемая страница не существует.</p>
+                            <p><a href="/">Вернуться на главную</a></p>
+                        </body>
+                    </html>
+                `);
+            }
+        });
+    } else {
+        // For other files (CSS, JS, images), let static middleware handle it
+        res.status(404).send('Not found');
+    }
 });
 
 // Запуск сервера
-app.listen(PORT, () => {
-    console.log(`Сервер запущен на порту ${PORT}`);
-    console.log(`API доступно по адресу: http://localhost:${PORT}/api`);
+app.listen(PORT, async () => {
+    console.log(`🚀 Сервер запущен на порту ${PORT}`);
+    console.log(`🌐 Основной URL: http://localhost:${PORT}`);
+    console.log(`📊 API доступно по адресу: http://localhost:${PORT}/api`);
+    
+    // Инициализация базы данных
+    await db.init();
+    
+    console.log('✅ База данных подключена');
+    console.log('\n📋 Доступные страницы:');
+    console.log(`   📍 Главная: http://localhost:${PORT}/`);
+    console.log(`   📍 О нас: http://localhost:${PORT}/about.html`);
+    console.log(`   📍 Каталог: http://localhost:${PORT}/catalog.html`);
+    console.log(`   📍 Контакты: http://localhost:${PORT}/contacts.html`);
+    console.log(`   📍 Вход: http://localhost:${PORT}/login.html`);
+    console.log(`   📍 Регистрация: http://localhost:${PORT}/register.html`);
+    console.log(`   📍 Личный кабинет: http://localhost:${PORT}/dashboard.html`);
+    console.log('\n🔑 Тестовый аккаунт:');
+    console.log('   📧 Email: test@example.com');
+    console.log('   🔐 Пароль: password123');
+    console.log('\n✨ Сервер готов к работе!');
 });
-
-module.exports = app;

@@ -1,18 +1,14 @@
-// Импортируем модуль sqlite3
+// backend/database.js
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 class Database {
-    // Конструктор объекта класса
     constructor() {
-        // Путь к базе данных
         this.dbPath = path.join(__dirname, 'database.db');
         this.db = null;
-        this.init();
     }
 
-    // Метод инициализации базы данных
-    init() {
+    async init() {
         return new Promise((resolve, reject) => {
             this.db = new sqlite3.Database(this.dbPath, (err) => {
                 if (err) {
@@ -28,28 +24,57 @@ class Database {
         });
     }
 
-    // Метод для создания таблиц для БД
-    createTables() {
+    async createTables() {
         return new Promise((resolve, reject) => {
             const createTablesQuery = `
+                -- Пользователи
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT,
-                    email TEXT UNIQUE,
+                    name TEXT NOT NULL,
+                    email TEXT UNIQUE NOT NULL,
                     password TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
 
-                CREATE TABLE IF NOT EXISTS products (
+                -- Сотрудники
+                CREATE TABLE IF NOT EXISTS employees (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT,
-                    price REAL,
+                    name TEXT NOT NULL,
+                    position TEXT NOT NULL,
                     description TEXT,
-                    image_url TEXT,
-                    category TEXT,
+                    experience TEXT,
+                    photo TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
 
+                -- Продукты
+                CREATE TABLE IF NOT EXISTS products (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    price REAL NOT NULL,
+                    description TEXT,
+                    image_url TEXT,
+                    category TEXT,
+                    weight TEXT,
+                    is_new BOOLEAN DEFAULT 0,
+                    on_sale BOOLEAN DEFAULT 0,
+                    old_price REAL,
+                    is_popular BOOLEAN DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+
+                -- Заказы
+                CREATE TABLE IF NOT EXISTS orders (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    items TEXT NOT NULL,
+                    total_amount REAL NOT NULL,
+                    status TEXT DEFAULT 'processing',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                );
+
+                -- Отзывы
                 CREATE TABLE IF NOT EXISTS reviews (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL,
@@ -61,12 +86,15 @@ class Database {
                     FOREIGN KEY(product_id) REFERENCES products(id)
                 );
 
+                -- Магазины
                 CREATE TABLE IF NOT EXISTS shops (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    address TEXT,
+                    address TEXT NOT NULL,
                     phone TEXT,
-                    latitude REAL, -- широта
-                    longitude REAL, -- долгота
+                    email TEXT,
+                    working_hours TEXT,
+                    latitude REAL,
+                    longitude REAL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             `;
@@ -83,8 +111,8 @@ class Database {
         });
     }
 
-    // Метод для регистрации пользователя
-    register(userData) {
+    // Регистрация пользователя
+    async register(userData) {
         return new Promise((resolve, reject) => {
             const { name, email, password } = userData;
 
@@ -113,8 +141,8 @@ class Database {
         });
     }
 
-    // Метод для авторизации пользователя
-    login(credentials) {
+    // Авторизация пользователя
+    async login(credentials) {
         return new Promise((resolve, reject) => {
             const { email, password } = credentials;
 
@@ -122,9 +150,9 @@ class Database {
                 return reject(new Error('Email и пароль обязательны'));
             }
 
-            const query = `SELECT id, name, email, created_at FROM users WHERE email = ? AND password = ?`;
+            const query = `SELECT id, name, email, password, created_at FROM users WHERE email = ?`;
 
-            this.db.get(query, [email, password], (err, row) => {
+            this.db.get(query, [email], (err, row) => {
                 if (err) {
                     reject(err);
                 } else if (row) {
@@ -132,24 +160,24 @@ class Database {
                         id: row.id,
                         name: row.name,
                         email: row.email,
-                        created_at: row.created_at,
-                        message: 'Авторизация успешна'
+                        password: row.password,
+                        created_at: row.created_at
                     });
                 } else {
-                    reject(new Error('Неверный email или пароль'));
+                    reject(new Error('Пользователь не найден'));
                 }
             });
         });
     }
 
-    // Метод для получения всех товаров
-    getAllProducts() {
+    // Получение всех сотрудников
+    async getAllEmployees() {
         return new Promise((resolve, reject) => {
             const query = `
-            SELECT id, name, price, description, image_url, category, created_at
-            FROM products
-            ORDER BY created_at DESC
-        `;
+                SELECT id, name, position, description, experience, photo, created_at
+                FROM employees
+                ORDER BY position, name
+            `;
 
             this.db.all(query, [], (err, rows) => {
                 if (err) {
@@ -161,18 +189,61 @@ class Database {
         });
     }
 
-    // Метод для получения одного товара по ID
-    getProductById(productId) {
+    // Получение всех продуктов
+    async getAllProducts() {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT id, name, price, description, image_url, category, 
+                       weight, is_new, on_sale, old_price, is_popular, created_at
+                FROM products
+                ORDER BY created_at DESC
+            `;
+
+            this.db.all(query, [], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    // Получение популярных продуктов
+    async getPopularProducts(limit = 4) {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT id, name, price, description, image_url, category, 
+                       weight, is_new, on_sale, old_price, is_popular, created_at
+                FROM products
+                WHERE is_popular = 1
+                ORDER BY created_at DESC
+                LIMIT ?
+            `;
+
+            this.db.all(query, [limit], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    // Получение продукта по ID
+    async getProductById(productId) {
         return new Promise((resolve, reject) => {
             if (!productId) {
                 return reject(new Error('ID товара обязателен'));
             }
 
             const query = `
-            SELECT id, name, price, description, image_url, category, created_at
-            FROM products
-            WHERE id = ?
-        `;
+                SELECT id, name, price, description, image_url, category, 
+                       weight, is_new, on_sale, old_price, is_popular, created_at
+                FROM products
+                WHERE id = ?
+            `;
 
             this.db.get(query, [productId], (err, row) => {
                 if (err) {
@@ -186,125 +257,135 @@ class Database {
         });
     }
 
-    // Метод для получения отзывов по product_id
-    getReviewsByProductId(productId) {
-        return new Promise((resolve, reject) => {
-            if (!productId) {
-                return reject(new Error('ID товара обязателен'));
+    async getUserOrders(userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC';
+        this.db.all(query, [userId], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
             }
-
-            const query = `
-            SELECT
-                r.id,
-                r.user_id,
-                r.product_id,
-                r.review,
-                r.stars,
-                r.created_at,
-                u.name as user_name
-            FROM reviews r
-            LEFT JOIN users u ON r.user_id = u.id
-            WHERE r.product_id = ?
-            ORDER BY r.created_at DESC
-        `;
-
-            this.db.all(query, [productId], (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
         });
-    }
+    });
+}
 
-    // Метод для получения отзывов по user_id
-    getReviewsByUserId(userId) {
-        return new Promise((resolve, reject) => {
-            if (!userId) {
-                return reject(new Error('ID пользователя обязателен'));
-            }
-
-            const query = `
-            SELECT
-                r.id,
-                r.user_id,
-                r.product_id,
-                r.review,
-                r.stars,
-                r.created_at,
-                p.name as product_name
-            FROM reviews r
-            LEFT JOIN products p ON r.product_id = p.id
-            WHERE r.user_id = ?
-            ORDER BY r.created_at DESC
-        `;
-
-            this.db.all(query, [userId], (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
-    }
-
-    // Метод для оставления отзыва по product_id
-    createReview(reviewData) {
-        return new Promise((resolve, reject) => {
-            const { user_id, product_id, review, stars } = reviewData;
-
-            // Валидация обязательных полей
-            if (!user_id || !product_id || !review || !stars) {
-                return reject(new Error('Все поля обязательны для заполнения'));
-            }
-
-            // Валидация оценки
-            if (stars < 1 || stars > 5) {
-                return reject(new Error('Оценка должна быть от 1 до 5 звезд'));
-            }
-
-            const query = `
-            INSERT INTO reviews (user_id, product_id, review, stars)
-            VALUES (?, ?, ?, ?)
-        `;
-
-            this.db.run(query, [user_id, product_id, review, stars], function(err) {
-                if (err) {
-                    if (err.message.includes('FOREIGN KEY constraint failed')) {
-                        reject(new Error('Пользователь или товар не существует'));
-                    } else {
+// Получение статистики пользователя
+async getUserStats(userId) {
+    return new Promise((resolve, reject) => {
+        const stats = {};
+        
+        // Получаем общее количество заказов
+        const countQuery = 'SELECT COUNT(*) as count FROM orders WHERE user_id = ?';
+        const sumQuery = 'SELECT SUM(total_amount) as total FROM orders WHERE user_id = ?';
+        const statusQuery = 'SELECT status, COUNT(*) as count FROM orders WHERE user_id = ? GROUP BY status';
+        
+        this.db.get(countQuery, [userId], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                stats.totalOrders = row.count || 0;
+                
+                this.db.get(sumQuery, [userId], (err, row) => {
+                    if (err) {
                         reject(err);
+                    } else {
+                        stats.totalAmount = row.total || 0;
+                        stats.averageOrder = stats.totalOrders > 0 ? stats.totalAmount / stats.totalOrders : 0;
+                        
+                        this.db.all(statusQuery, [userId], (err, rows) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                stats.statusStats = rows || [];
+                                resolve(stats);
+                            }
+                        });
                     }
+                });
+            }
+        });
+    });
+}
+
+    // Создание продукта
+    async createProduct(productData) {
+        return new Promise((resolve, reject) => {
+            const { name, price, description, image_url, category, weight, is_new, on_sale, old_price, is_popular } = productData;
+
+            if (!name || !price) {
+                return reject(new Error('Название и цена товара обязательны'));
+            }
+
+            const query = `
+                INSERT INTO products (name, price, description, image_url, category, 
+                                     weight, is_new, on_sale, old_price, is_popular)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            this.db.run(query, [
+                name, 
+                price, 
+                description || null, 
+                image_url || null, 
+                category || null,
+                weight || null, 
+                is_new ? 1 : 0, 
+                on_sale ? 1 : 0, 
+                old_price || null, 
+                is_popular ? 1 : 0
+            ], function(err) {
+                if (err) {
+                    reject(err);
                 } else {
                     resolve({
                         id: this.lastID,
-                        user_id,
-                        product_id,
-                        review,
-                        stars,
-                        message: 'Отзыв успешно добавлен'
+                        ...productData,
+                        message: 'Товар успешно создан'
                     });
                 }
             });
         });
     }
 
-    // Метод для получения всех магазинов
-    getAllShops() {
+    // Создание сотрудника
+    async createEmployee(employeeData) {
+        return new Promise((resolve, reject) => {
+            const { name, position, description, experience, photo } = employeeData;
+
+            const query = `
+                INSERT INTO employees (name, position, description, experience, photo)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+
+            this.db.run(query, [
+                name, 
+                position, 
+                description || null, 
+                experience || null, 
+                photo || null
+            ], function(err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve({
+                        id: this.lastID,
+                        ...employeeData,
+                        message: 'Сотрудник успешно добавлен'
+                    });
+                }
+            });
+        });
+    }
+
+    // Получение всех магазинов
+    async getAllShops() {
         return new Promise((resolve, reject) => {
             const query = `
-            SELECT
-                id,
-                address,
-                phone,
-                latitude,
-                longitude,
-                created_at
-            FROM shops
-            ORDER BY created_at DESC
-        `;
+                SELECT id, address, phone, email, working_hours, latitude, longitude, created_at
+                FROM shops
+                ORDER BY created_at
+            `;
 
             this.db.all(query, [], (err, rows) => {
                 if (err) {
@@ -316,127 +397,34 @@ class Database {
         });
     }
 
-    // Метод для создания товара
-    createProduct(productData) {
+    // Создание магазина
+    async createShop(shopData) {
         return new Promise((resolve, reject) => {
-            const { name, price, description, image_url, category } = productData;
+            const { address, phone, email, working_hours, latitude, longitude } = shopData;
 
-            // Валидация обязательных полей
-            if (!name || !price) {
-                return reject(new Error('Название и цена товара обязательны'));
-            }
-
-            const query = `
-            INSERT INTO products (name, price, description, image_url, category)
-            VALUES (?, ?, ?, ?, ?)
-        `;
-
-            this.db.run(query, [name, price, description, image_url, category], function(err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve({
-                        id: this.lastID,
-                        name,
-                        price,
-                        description,
-                        image_url,
-                        category,
-                        message: 'Товар успешно создан'
-                    });
-                }
-            });
-        });
-    }
-
-    // Метод для создания магазина
-    createShop(shopData) {
-        return new Promise((resolve, reject) => {
-            const { address, phone, latitude, longitude } = shopData;
-
-            // Валидация обязательных полей
             if (!address) {
                 return reject(new Error('Адрес магазина обязателен'));
             }
 
             const query = `
-            INSERT INTO shops (address, phone, latitude, longitude)
-            VALUES (?, ?, ?, ?)
-        `;
+                INSERT INTO shops (address, phone, email, working_hours, latitude, longitude)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
 
-            this.db.run(query, [address, phone, latitude, longitude], function(err) {
+            this.db.run(query, [
+                address, 
+                phone || null, 
+                email || null, 
+                working_hours || null,
+                latitude || null, 
+                longitude || null
+            ], function(err) {
                 if (err) {
                     reject(err);
                 } else {
                     resolve({
                         id: this.lastID,
-                        address,
-                        phone,
-                        latitude,
-                        longitude,
-                        message: 'Магазин успешно создан'
-                    });
-                }
-            });
-        });
-    }// Метод для создания товара
-    createProduct(productData) {
-        return new Promise((resolve, reject) => {
-            const { name, price, description, image_url, category } = productData;
-
-            // Валидация обязательных полей
-            if (!name || !price) {
-                return reject(new Error('Название и цена товара обязательны'));
-            }
-
-            const query = `
-            INSERT INTO products (name, price, description, image_url, category)
-            VALUES (?, ?, ?, ?, ?)
-        `;
-
-            this.db.run(query, [name, price, description, image_url, category], function(err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve({
-                        id: this.lastID,
-                        name,
-                        price,
-                        description,
-                        image_url,
-                        category,
-                        message: 'Товар успешно создан'
-                    });
-                }
-            });
-        });
-    }
-
-    // Метод для создания магазина
-    createShop(shopData) {
-        return new Promise((resolve, reject) => {
-            const { address, phone, latitude, longitude } = shopData;
-
-            // Валидация обязательных полей
-            if (!address) {
-                return reject(new Error('Адрес магазина обязателен'));
-            }
-
-            const query = `
-            INSERT INTO shops (address, phone, latitude, longitude)
-            VALUES (?, ?, ?, ?)
-        `;
-
-            this.db.run(query, [address, phone, latitude, longitude], function(err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve({
-                        id: this.lastID,
-                        address,
-                        phone,
-                        latitude,
-                        longitude,
+                        ...shopData,
                         message: 'Магазин успешно создан'
                     });
                 }
@@ -444,8 +432,70 @@ class Database {
         });
     }
 
-    // Метод для закрытия соединения
-    close() {
+    // Создание заказа
+    async createOrder(orderData) {
+        return new Promise((resolve, reject) => {
+            const { user_id, items, total_amount, status } = orderData;
+
+            const query = `
+                INSERT INTO orders (user_id, items, total_amount, status)
+                VALUES (?, ?, ?, ?)
+            `;
+
+            this.db.run(query, [
+                user_id, 
+                items, 
+                total_amount, 
+                status || 'processing'
+            ], function(err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve({
+                        id: this.lastID,
+                        ...orderData,
+                        message: 'Заказ успешно создан'
+                    });
+                }
+            });
+        });
+    }
+
+    // Создание отзыва
+    async createReview(reviewData) {
+        return new Promise((resolve, reject) => {
+            const { user_id, product_id, review, stars } = reviewData;
+
+            if (stars < 1 || stars > 5) {
+                return reject(new Error('Оценка должна быть от 1 до 5 звезд'));
+            }
+
+            const query = `
+                INSERT INTO reviews (user_id, product_id, review, stars)
+                VALUES (?, ?, ?, ?)
+            `;
+
+            this.db.run(query, [
+                user_id, 
+                product_id, 
+                review, 
+                stars
+            ], function(err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve({
+                        id: this.lastID,
+                        ...reviewData,
+                        message: 'Отзыв успешно добавлен'
+                    });
+                }
+            });
+        });
+    }
+
+    // Закрытие соединения
+    async close() {
         return new Promise((resolve, reject) => {
             if (this.db) {
                 this.db.close((err) => {
@@ -463,5 +513,4 @@ class Database {
     }
 }
 
-// Экспорт класса
 module.exports = Database;

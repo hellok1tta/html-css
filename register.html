@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Пекарня "Вкусный уголок"</title>
+    <link rel="stylesheet" href="scss/main.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" aria-label="Перейти на главную страницу">
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
+                </a>
+                <h1>Пекарня "Вкусный уголок"</h1>
+            </div>
+            
+            <nav class="main-nav" aria-label="Основное меню">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="login.html">Вход</a></li>
+                    <li><a href="register.html" class="active">Регистрация</a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn" aria-label="Открыть меню">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="auth-hero">
+            <div class="container">
+                <h1>Регистрация</h1>
+                <p>Создайте аккаунт, чтобы получить доступ ко всем возможностям личного кабинета</p>
+            </div>
+        </section>
+
+        <section class="auth-section">
+            <div class="container">
+                <div class="auth-container">
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Имя *</label>
+                            <input type="text" id="name" class="form-control" required placeholder="Иван Иванов">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regEmail" class="form-label">Email *</label>
+                            <input type="email" id="regEmail" class="form-control" required placeholder="ivan@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regPassword" class="form-label">Пароль *</label>
+                            <input type="password" id="regPassword" class="form-control" required placeholder="Не менее 6 символов">
+                            <div class="password-strength">
+                                <div class="strength-bar"></div>
+                                <div class="strength-text">Надежность пароля: <span>слабый</span></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Подтверждение пароля *</label>
+                            <input type="password" id="confirmPassword" class="form-control" required placeholder="Повторите пароль">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms" required>
+                                <span class="checkmark"></span>
+                                Я соглашаюсь с <a href="#" class="terms-link">правилами использования</a> и <a href="#" class="terms-link">политикой конфиденциальности</a>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="newsletter" checked>
+                                <span class="checkmark"></span>
+                                Хочу получать информацию об акциях и новинках
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" id="registerBtn">
+                            <span class="btn-text">Зарегистрироваться</span>
+                            <span class="btn-loader" style="display: none;">⏳</span>
+                        </button>
+
+                        <div class="auth-divider">
+                            <span>Уже есть аккаунт?</span>
+                        </div>
+
+                        <a href="login.html" class="btn btn-outline btn-block">
+                            Войти в существующий аккаунт
+                        </a>
+                    </form>
+
+                    <div class="auth-info">
+                        <h3>Преимущества регистрации</h3>
+                        <ul>
+                            <li>Быстрое оформление заказов</li>
+                            <li>История всех покупок</li>
+                            <li>Персональные скидки и бонусы</li>
+                            <li>Избранные товары</li>
+                            <li>Уведомления о статусе заказов</li>
+                            <li>Скидка 10% на первый заказ</li>
+                        </ul>
+                        
+                        <div class="bonus-info">
+                            <h4>🎁 Бонус за регистрацию!</h4>
+                            <p>Получите <strong>10% скидку</strong> на первый заказ сразу после регистрации.</p>
+                            <p>Промокод будет отправлен на ваш email.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-placeholder">🍞</div>
+                    <p>Пекарня "Вкусный уголок"</p>
+                    <p>Свежая выпечка с любовью с 2010 года</p>
+                </div>
+                
+                <nav class="footer-nav" aria-label="Дополнительное меню">
+                    <h4>Меню</h4>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="catalog.html">Каталог</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                    </ul>
+                </nav>
+                
+                <address class="footer-contact">
+                    <h4>Контакты</h4>
+                    <p>г. Москва, ул. Пушкина, д. 10</p>
+                    <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                    <p><a href="mailto:info@vkusniy-ugolok.ru">info@vkusniy-ugolok.ru</a></p>
+                </address>
+                
+                <div class="footer-social">
+                    <h4>Мы в соцсетях</h4>
+                    <ul>
+                        <li><a href="#" aria-label="Наш Instagram">Instagram</a></li>
+                        <li><a href="#" aria-label="Наша страница ВКонтакте">VKontakte</a></li>
+                        <li><a href="#" aria-label="Наша страница Facebook">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Пекарня "Вкусный уголок". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('registerForm');
+            const registerBtn = document.getElementById('registerBtn');
+            const btnText = registerBtn.querySelector('.btn-text');
+            const btnLoader = registerBtn.querySelector('.btn-loader');
+            const passwordInput = document.getElementById('regPassword');
+            const confirmInput = document.getElementById('confirmPassword');
+            const strengthBar = document.querySelector('.strength-bar');
+            const strengthText = document.querySelector('.strength-text span');
+
+            // Проверка надежности пароля
+            passwordInput.addEventListener('input', () => {
+                const password = passwordInput.value;
+                let strength = 0;
+                
+                if (password.length >= 6) strength++;
+                if (password.length >= 8) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+                
+                const strengthPercent = (strength / 5) * 100;
+                strengthBar.style.width = strengthPercent + '%';
+                
+                let text = 'слабый';
+                let color = '#dc3545';
+                
+                if (strength >= 3) {
+                    text = 'средний';
+                    color = '#ffc107';
+                }
+                if (strength >= 4) {
+                    text = 'сильный';
+                    color = '#28a745';
+                }
+                
+                strengthBar.style.backgroundColor = color;
+                strengthText.textContent = text;
+                strengthText.style.color = color;
+            });
+
+            // Проверка совпадения паролей
+            confirmInput.addEventListener('input', () => {
+                if (passwordInput.value !== confirmInput.value) {
+                    confirmInput.setCustomValidity('Пароли не совпадают');
+                } else {
+                    confirmInput.setCustomValidity('');
+                }
+            });
+
+            // Обработка формы регистрации
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                // Валидация
+                if (password !== confirmPassword) {
+                    alert('Пароли не совпадают');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    alert('Пароль должен содержать не менее 6 символов');
+                    return;
+                }
+                
+                // Показываем индикатор загрузки
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+                registerBtn.disabled = true;
+                
+                try {
+                    const result = await auth.register(name, email, password);
+                    
+                    if (result.success) {
+                        alert('Регистрация успешна! Добро пожаловать!');
+                        
+                        // Автоматический вход после регистрации
+                        const loginResult = await auth.login(email, password);
+                        if (loginResult.success) {
+                            window.location.href = 'dashboard.html';
+                        }
+                    } else {
+                        alert('Ошибка регистрации: ' + result.error);
+                        btnText.style.display = 'inline-block';
+                        btnLoader.style.display = 'none';
+                        registerBtn.disabled = false;
+                    }
+                } catch (error) {
+                    alert('Ошибка сети. Пожалуйста, попробуйте позже.');
+                    btnText.style.display = 'inline-block';
+                    btnLoader.style.display = 'none';
+                    registerBtn.disabled = false;
+                }
+            });
+
+            // Проверяем, если пользователь уже авторизован
+            auth.checkAuth().then(isAuthenticated => {
+                if (isAuthenticated) {
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

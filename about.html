@@ -12,7 +12,9 @@
         <div class="container">
             <div class="logo-container">
                 <a href="index.html" aria-label="Перейти на главную страницу">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
                 </a>
                 <h1>Пекарня "Вкусный уголок"</h1>
             </div>
@@ -23,6 +25,8 @@
                     <li><a href="about.html" class="active">О нас</a></li>
                     <li><a href="catalog.html">Каталог</a></li>
                     <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="login.html">Вход</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
                     <li><a href="#" class="cart-link">Корзина <span class="cart-count">0</span></a></li>
                 </ul>
             </nav>
@@ -56,7 +60,7 @@
                         </ul>
                     </div>
                     <div class="story-image">
-                        <img src="#" alt="Интерьер нашей пекарни">
+                        <img src="images/bakery.jpg" alt="Интерьер нашей пекарни">
                     </div>
                 </div>
             </div>
@@ -103,31 +107,9 @@
         <section class="team">
             <div class="container">
                 <h2>Наша команда</h2>
-                <div class="team-grid">
-                    <div class="team-member">
-                        <div class="member-photo">👨‍🍳</div>
-                        <h3>Иван Петров</h3>
-                        <p class="position">Главный пекарь</p>
-                        <p>Опыт работы более 15 лет. Специализируется на традиционном хлебе и выпечке. Закончил Московский колледж кулинарного мастерства.</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-photo">👩‍🍳</div>
-                        <h3>Мария Сидорова</h3>
-                        <p class="position">Кондитер</p>
-                        <p>Создает потрясающие десерты и торты. Опыт работы в кондитерском искусстве 12 лет. Проходила стажировку во Франции.</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-photo">👨‍🍳</div>
-                        <h3>Алексей Козлов</h3>
-                        <p class="position">Пекарь</p>
-                        <p>Специалист по слоеному тесту и французской выпечке. Работает в пекарне с 2015 года.</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-photo">👩‍💼</div>
-                        <h3>Елена Новикова</h3>
-                        <p class="position">Управляющая</p>
-                        <p>Обеспечивает бесперебойную работу пекарни и заботится о каждом клиенте. Работает с нами с основания пекарни.</p>
-                    </div>
+                <div class="team-grid" id="team-container">
+                    <!-- Сотрудники будут загружены через JavaScript -->
+                    <div class="loading">Загрузка информации о команде...</div>
                 </div>
             </div>
         </section>
@@ -174,7 +156,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">🍞</div>
                     <p>Пекарня "Вкусный уголок"</p>
                     <p>Свежая выпечка с любовью с 2010 года</p>
                 </div>
@@ -211,6 +193,44 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+<script>
+    // Загрузка команды
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadTeam();
+    });
+
+    async function loadTeam() {
+        const container = document.getElementById('team-container');
+        
+        try {
+            const response = await fetch('/api/team');
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                container.innerHTML = result.data.map(employee => `
+                    <div class="team-member">
+                        <div>
+                            <img src="${employee.photo || 'images/placeholder-member.jpg'}" 
+                                 alt="${employee.name}" 
+                                 class="member-photo"
+                                 onerror="this.onerror=null; this.src='images/placeholder-member.jpg'">
+                        </div>
+                        <h3>${employee.name}</h3>
+                        <p class="position">${employee.position}</p>
+                        <p>${employee.description || ''}</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p>Информация о команде скоро появится</p>';
+            }
+        } catch (error) {
+            console.error('Error loading team:', error);
+            container.innerHTML = '<p class="error">Не удалось загрузить информацию о команде</p>';
+        }
+    }
+</script>
 </body>
 </html>

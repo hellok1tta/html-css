@@ -12,7 +12,9 @@
         <div class="container">
             <div class="logo-container">
                 <a href="index.html" aria-label="Перейти на главную страницу пекарни 'Вкусный уголок'">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
                 </a>
                 <h1>Пекарня "Вкусный уголок"</h1>
             </div>
@@ -23,6 +25,8 @@
                     <li><a href="about.html">О нас</a></li>
                     <li><a href="catalog.html">Каталог</a></li>
                     <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="login.html">Вход</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
                     <li><a href="#" class="cart-link">Корзина <span class="cart-count">0</span></a></li>
                 </ul>
             </nav>
@@ -63,42 +67,12 @@
             </div>
         </section>
 
-        <section aria-labelledby="products-heading">
+        <section aria-labelledby="popular-heading">
             <div class="container">
-                <h2 id="products-heading">Наша продукция</h2>
-                <div class="products-grid">
-                    <article class="card">
-                        <div class="card-image">🥖</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Хлеб</h3>
-                            <p class="card-text">Свежий хлеб из натуральных ингредиентов по традиционным рецептам</p>
-                            <a href="catalog.html?category=bread" class="btn btn-secondary">Подробнее</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-image">🥧</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Пироги</h3>
-                            <p class="card-text">Ароматные пироги с различными начинками для всей семьи</p>
-                            <a href="catalog.html?category=pies" class="btn btn-secondary">Подробнее</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-image">🍰</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Десерты</h3>
-                            <p class="card-text">Вкуснейшие десерты для настоящих сладкоежек</p>
-                            <a href="catalog.html?category=desserts" class="btn btn-secondary">Подробнее</a>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-image">🎂</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Торты на заказ</h3>
-                            <p class="card-text">Праздничные и свадебные торты по вашему вкусу</p>
-                            <a href="catalog.html?category=cakes" class="btn btn-secondary">Подробнее</a>
-                        </div>
-                    </article>
+                <h2 id="popular-heading">Популярные товары</h2>
+                <div class="popular-grid" id="popular-products">
+                    <!-- Продукты будут загружены через JavaScript -->
+                    <div class="loading">Загрузка товаров...</div>
                 </div>
             </div>
         </section>
@@ -109,58 +83,6 @@
                     <h3>Скидка 20% на первый заказ!</h3>
                     <p>При заказе от 1000 рублей получите скидку 20% по промокоду: WELCOME20</p>
                     <a href="catalog.html" class="btn">Воспользоваться акцией</a>
-                </div>
-            </div>
-        </section>
-
-        <section aria-labelledby="popular-heading">
-            <div class="container">
-                <h2 id="popular-heading">Популярные товары</h2>
-                <div class="popular-grid">
-                    <figure class="card">
-                        <div class="card-image">🥖</div>
-                        <figcaption class="card-body">
-                            <h3 class="card-title">Ржаной хлеб</h3>
-                            <p class="card-text">Традиционный ржаной хлеб с хрустящей корочкой</p>
-                            <div class="card-price">150 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-primary btn-block" data-product="Ржаной хлеб" data-price="150">В корзину</button>
-                            </div>
-                        </figcaption>
-                    </figure>
-                    <figure class="card">
-                        <div class="card-image">🥐</div>
-                        <figcaption class="card-body">
-                            <h3 class="card-title">Круассан с шоколадом</h3>
-                            <p class="card-text">Слоеный круассан с начинкой из бельгийского шоколада</p>
-                            <div class="card-price">120 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-primary btn-block" data-product="Круассан с шоколадом" data-price="120">В корзину</button>
-                            </div>
-                        </figcaption>
-                    </figure>
-                    <figure class="card">
-                        <div class="card-image">🍎</div>
-                        <figcaption class="card-body">
-                            <h3 class="card-title">Пирог с яблоками</h3>
-                            <p class="card-text">Домашний пирог с яблочной начинкой и корицей</p>
-                            <div class="card-price">350 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-primary btn-block" data-product="Пирог с яблоками" data-price="350">В корзину</button>
-                            </div>
-                        </figcaption>
-                    </figure>
-                    <figure class="card">
-                        <div class="card-image">🧁</div>
-                        <figcaption class="card-body">
-                            <h3 class="card-title">Эклеры (4 шт.)</h3>
-                            <p class="card-text">Набор из четырех эклеров с разными начинками</p>
-                            <div class="card-price">280 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-primary btn-block" data-product="Эклеры (4 шт.)" data-price="280">В корзину</button>
-                            </div>
-                        </figcaption>
-                    </figure>
                 </div>
             </div>
         </section>
@@ -180,9 +102,6 @@
                             <li>Доступные цены</li>
                         </ul>
                         <a href="about.html" class="btn btn-primary">Узнать больше о нас</a>
-                    </div>
-                    <div class="about-image">
-                        <img src="#" alt="Интерьер нашей пекарни">
                     </div>
                 </div>
             </div>
@@ -244,7 +163,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">🍞</div>
                     <p>Пекарня "Вкусный уголок"</p>
                     <p>Свежая выпечка с любовью с 2010 года</p>
                 </div>
@@ -281,6 +200,172 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+<script>
+    // Загрузка популярных товаров
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadPopularProducts();
+        updateCartCount(); // Обновляем счетчик корзины
+    });
+
+    async function loadPopularProducts() {
+        const container = document.getElementById('popular-products');
+        
+        try {
+            const response = await fetch('/api/products/popular?limit=4');
+            
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success && result.data && result.data.length > 0) {
+                const products = result.data;
+                
+                container.innerHTML = products.map(product => `
+                    <figure class="card">
+                        <div>
+                            <img src="${product.image_url || 'images/placeholder.jpg'}" 
+                                 alt="${product.name}" 
+                                 class="card-image"
+                                 onerror="this.onerror=null; this.src='images/placeholder.jpg'">
+                        </div>
+                        <figcaption class="card-body">
+                            <h3 class="card-title">${product.name}</h3>
+                            <p class="card-text">${product.description || ''}</p>
+                            <div class="card-price">
+                                ${product.price} руб.
+                                ${product.old_price ? `<span class="old-price">${product.old_price} руб.</span>` : ''}
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-block add-to-cart-btn" 
+                                        data-product-id="${product.id}"
+                                        data-product-name="${product.name}" 
+                                        data-product-price="${product.price}">
+                                    В корзину
+                                </button>
+                            </div>
+                        </figcaption>
+                    </figure>
+                `).join('');
+                
+                // Добавляем обработчики событий для кнопок "В корзину"
+                container.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = this.dataset.productId;
+                        const productName = this.dataset.productName;
+                        const price = parseFloat(this.dataset.productPrice);
+                        
+                        addToCart(productId, productName, price);
+                    });
+                });
+                
+            } else {
+                container.innerHTML = `
+                    <div class="no-products">
+                        <p>Популярные товары скоро появятся</p>
+                        <a href="catalog.html" class="btn btn-primary">Посмотреть все товары</a>
+                    </div>
+                `;
+            }
+            
+        } catch (error) {
+            console.error('Error loading popular products:', error);
+            container.innerHTML = `
+                <div class="error">
+                    <p>Не удалось загрузить товары</p>
+                    <button onclick="loadPopularProducts()" class="btn btn-outline">Попробовать снова</button>
+                </div>
+            `;
+        }
+    }
+
+    function addToCart(productId, productName, price) {
+        // Получаем корзину из localStorage
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        // Ищем товар в корзине
+        const existingItem = cart.find(item => item.id == productId);
+        
+        if (existingItem) {
+            // Если товар уже есть, увеличиваем количество
+            existingItem.quantity += 1;
+        } else {
+            // Если товара нет, добавляем новый
+            cart.push({
+                id: productId,
+                name: productName,
+                price: price,
+                quantity: 1
+            });
+        }
+        
+        // Сохраняем корзину
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Обновляем счетчик корзины
+        updateCartCount();
+        
+        // Показываем уведомление
+        showNotification(`${productName} добавлен в корзину!`);
+    }
+
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+        // Обновляем все счетчики на странице
+        document.querySelectorAll('.cart-count').forEach(el => {
+            el.textContent = totalItems;
+        });
+    }
+
+    function showNotification(message) {
+        // Создаем уведомление
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        `;
+        
+        // Добавляем стили для анимации если их нет
+        if (!document.querySelector('#notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Удаляем уведомление через 3 секунды
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+</script>
 </body>
 </html>

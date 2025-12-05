@@ -12,7 +12,9 @@
         <div class="container">
             <div class="logo-container">
                 <a href="index.html" aria-label="Перейти на главную страницу">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
                 </a>
                 <h1>Пекарня "Вкусный уголок"</h1>
             </div>
@@ -23,6 +25,8 @@
                     <li><a href="about.html">О нас</a></li>
                     <li><a href="catalog.html" class="active">Каталог</a></li>
                     <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="login.html">Вход</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
                     <li><a href="#" class="cart-link">Корзина <span class="cart-count">0</span></a></li>
                 </ul>
             </nav>
@@ -39,42 +43,31 @@
             </div>
         </section>
 
-        <section class="catalog-filters">
+        <section class="products-filter">
             <div class="container">
-                <div class="filters-content">
-                    <div class="filter-group">
-                        <label for="category">Категория</label>
-                        <select id="category" class="form-control">
-                            <option value="all">Все категории</option>
-                            <option value="bread">Хлеб</option>
-                            <option value="pies">Пироги</option>
-                            <option value="desserts">Десерты</option>
-                            <option value="cakes">Торты</option>
-                            <option value="pastries">Сдобная выпечка</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="price">Цена</label>
-                        <select id="price" class="form-control">
-                            <option value="all">Любая цена</option>
-                            <option value="0-100">до 100 руб.</option>
-                            <option value="100-300">100-300 руб.</option>
-                            <option value="300-500">300-500 руб.</option>
-                            <option value="500+">от 500 руб.</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="sort">Сортировка</label>
-                        <select id="sort" class="form-control">
-                            <option value="popular">По популярности</option>
-                            <option value="price-asc">По возрастанию цены</option>
-                            <option value="price-desc">По убыванию цены</option>
-                            <option value="name">По названию</option>
-                        </select>
-                    </div>
-                    <div class="filter-actions">
-                        <button class="btn btn-secondary" id="reset-filters">Сбросить</button>
-                        <button class="btn btn-primary" id="apply-filters">Применить</button>
+                <div class="filter-controls">
+                    <select id="categoryFilter" class="form-control">
+                        <option value="all">Все категории</option>
+                        <option value="Хлеб">Хлеб</option>
+                        <option value="Пироги">Пироги</option>
+                        <option value="Десерты">Десерты</option>
+                        <option value="Сдобная выпечка">Сдобная выпечка</option>
+                    </select>
+                    <select id="sortFilter" class="form-control">
+                        <option value="newest">Сначала новые</option>
+                        <option value="price-low">По возрастанию цены</option>
+                        <option value="price-high">По убыванию цены</option>
+                        <option value="name">По названию</option>
+                    </select>
+                    <div class="filter-badges">
+                        <label class="checkbox-badge">
+                            <input type="checkbox" id="newFilter">
+                            <span>Новинки</span>
+                        </label>
+                        <label class="checkbox-badge">
+                            <input type="checkbox" id="saleFilter">
+                            <span>Акции</span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -82,134 +75,13 @@
 
         <section class="products-catalog">
             <div class="container">
-                <div class="catalog-grid">
-                    <div class="product-card">
-                        <div class="card-badge">
-                            <span class="badge badge-new">Новинка</span>
-                        </div>
-                        <div class="card-image">🥖</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Ржаной хлеб</h3>
-                            <p class="card-description">Традиционный ржаной хлеб с хрустящей корочкой, приготовленный по старинному рецепту</p>
-                            <div class="card-price">150 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Ржаной хлеб" data-price="150">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-image">🥐</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Круассан с шоколадом</h3>
-                            <p class="card-description">Слоеный круассан с начинкой из бельгийского шоколада, нежный и воздушный</p>
-                            <div class="card-price">120 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Круассан с шоколадом" data-price="120">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-badge">
-                            <span class="badge badge-sale">Акция</span>
-                        </div>
-                        <div class="card-image">🍎</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Пирог с яблоками</h3>
-                            <p class="card-description">Домашний пирог с яблочной начинкой и корицей, идеально подходит к чаю</p>
-                            <div class="card-price">
-                                350 руб.
-                                <span class="old-price">400 руб.</span>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Пирог с яблоками" data-price="350">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-image">🧁</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Эклеры (4 шт.)</h3>
-                            <p class="card-description">Набор из четырех эклеров с разными начинками: ваниль, шоколад, кофе, клубника</p>
-                            <div class="card-price">280 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Эклеры (4 шт.)" data-price="280">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-image">🍞</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Багет французский</h3>
-                            <p class="card-description">Классический французский багет с хрустящей корочкой и нежным мякишем</p>
-                            <div class="card-price">90 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Багет французский" data-price="90">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-image">🥧</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Пирог с вишней</h3>
-                            <p class="card-description">Сочный пирог со свежей вишней, идеальное сочетание сладкого и кислого</p>
-                            <div class="card-price">380 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Пирог с вишней" data-price="380">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-image">🍰</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Тирамису</h3>
-                            <p class="card-description">Классический итальянский десерт с кофе, маскарпоне и какао</p>
-                            <div class="card-price">320 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Тирамису" data-price="320">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="card-image">🥮</div>
-                        <div class="card-body">
-                            <h3 class="card-title">Пирожное "Картошка"</h3>
-                            <p class="card-description">Нежное пирожное из крошки бисквита с масляным кремом и какао</p>
-                            <div class="card-price">85 руб.</div>
-                            <div class="card-actions">
-                                <button class="btn btn-outline">Подробнее</button>
-                                <button class="btn btn-primary" data-product="Пирожное 'Картошка'" data-price="85">В корзину</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="catalog-grid" id="products-container">
+                    <!-- Продукты будут загружены через JavaScript -->
+                    <div class="loading">Загрузка каталога...</div>
                 </div>
-
-                <div class="pagination">
-                    <div class="page-item">
-                        <a href="#" class="page-link active">1</a>
-                    </div>
-                    <div class="page-item">
-                        <a href="#" class="page-link">2</a>
-                    </div>
-                    <div class="page-item">
-                        <a href="#" class="page-link">3</a>
-                    </div>
-                    <div class="page-item">
-                        <a href="#" class="page-link">Следующая</a>
-                    </div>
+                
+                <div class="pagination" id="pagination">
+                    <!-- Пагинация будет добавлена через JavaScript -->
                 </div>
             </div>
         </section>
@@ -232,7 +104,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="#" alt="Логотип пекарни 'Вкусный уголок'">
+                    <div class="logo-placeholder">🍞</div>
                     <p>Пекарня "Вкусный уголок"</p>
                     <p>Свежая выпечка с любовью с 2010 года</p>
                 </div>
@@ -269,6 +141,76 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+<script>
+    // Загрузка всех товаров
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadAllProducts();
+        updateCartCount(); // Обновляем счетчик корзины
+    });
+
+    async function loadAllProducts() {
+        const container = document.getElementById('products-container');
+        
+        try {
+            const response = await fetch('/api/products');
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                container.innerHTML = result.data.map(product => `
+                    <div class="product-card">
+                        <div class="card-badge">
+                            ${product.is_new ? '<span class="badge badge-new">Новинка</span>' : ''}
+                            ${product.on_sale ? '<span class="badge badge-sale">Акция</span>' : ''}
+                        </div>
+                        <div>
+                            <img src="${product.image_url || 'images/placeholder.jpg'}" 
+                                 alt="${product.name}" 
+                                 class="card-image"
+                                 onerror="this.onerror=null; this.src='images/placeholder.jpg'">
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">${product.name}</h3>
+                            <p class="card-description">${product.description || ''}</p>
+                            ${product.category ? `<p class="card-category">${product.category}</p>` : ''}
+                            <div class="card-price">
+                                ${product.price} руб.
+                                ${product.old_price ? `<span class="old-price">${product.old_price} руб.</span>` : ''}
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-outline">Подробнее</button>
+                                <button class="btn btn-primary add-to-cart-btn"
+                                        data-product-id="${product.id}"
+                                        data-product-name="${product.name}" 
+                                        data-product-price="${product.price}">
+                                    В корзину
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Добавляем обработчики событий для кнопок "В корзину"
+                container.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = this.dataset.productId;
+                        const productName = this.dataset.productName;
+                        const price = parseFloat(this.dataset.productPrice);
+                        
+                        addToCart(productId, productName, price);
+                    });
+                });
+                
+            } else {
+                container.innerHTML = '<p class="no-products">Товары не найдены</p>';
+            }
+        } catch (error) {
+            console.error('Error loading products:', error);
+            container.innerHTML = '<p class="error">Не удалось загрузить товары</p>';
+        }
+    }
+</script>
 </body>
 </html>

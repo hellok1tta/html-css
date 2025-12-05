@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Пекарня "Вкусный уголок"</title>
+    <link rel="stylesheet" href="scss/main.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <a href="index.html" aria-label="Перейти на главную страницу">
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
+                </a>
+                <h1>Пекарня "Вкусный уголок"</h1>
+            </div>
+            
+            <nav class="main-nav" aria-label="Основное меню">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="login.html" class="active">Вход</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn" aria-label="Открыть меню">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="auth-hero">
+            <div class="container">
+                <h1>Вход в личный кабинет</h1>
+                <p>Войдите в свой аккаунт, чтобы просматривать заказы и управлять профилем</p>
+            </div>
+        </section>
+
+        <section class="auth-section">
+            <div class="container">
+                <div class="auth-container">
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" id="email" class="form-control" required placeholder="ivan@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Пароль *</label>
+                            <input type="password" id="password" class="form-control" required placeholder="Введите пароль">
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="remember">
+                                <span class="checkmark"></span>
+                                Запомнить меня
+                            </label>
+                            <a href="#" class="forgot-password">Забыли пароль?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+                            <span class="btn-text">Войти</span>
+                            <span class="btn-loader" style="display: none;">⏳</span>
+                        </button>
+
+                        <div class="auth-divider">
+                            <span>или</span>
+                        </div>
+
+                        <a href="register.html" class="btn btn-outline btn-block">
+                            Создать новый аккаунт
+                        </a>
+                    </form>
+
+                    <div class="auth-info">
+                        <h3>Преимущества личного кабинета</h3>
+                        <ul>
+                            <li>История всех заказов</li>
+                            <li>Быстрый повторный заказ</li>
+                            <li>Отслеживание статуса доставки</li>
+                            <li>Специальные предложения</li>
+                            <li>Управление профилем</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-placeholder">🍞</div>
+                    <p>Пекарня "Вкусный уголок"</p>
+                    <p>Свежая выпечка с любовью с 2010 года</p>
+                </div>
+                
+                <nav class="footer-nav" aria-label="Дополнительное меню">
+                    <h4>Меню</h4>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="catalog.html">Каталог</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                    </ul>
+                </nav>
+                
+                <address class="footer-contact">
+                    <h4>Контакты</h4>
+                    <p>г. Москва, ул. Пушкина, д. 10</p>
+                    <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                    <p><a href="mailto:info@vkusniy-ugolok.ru">info@vkusniy-ugolok.ru</a></p>
+                </address>
+                
+                <div class="footer-social">
+                    <h4>Мы в соцсетях</h4>
+                    <ul>
+                        <li><a href="#" aria-label="Наш Instagram">Instagram</a></li>
+                        <li><a href="#" aria-label="Наша страница ВКонтакте">VKontakte</a></li>
+                        <li><a href="#" aria-label="Наша страница Facebook">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Пекарня "Вкусный уголок". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = loginBtn.querySelector('.btn-text');
+            const btnLoader = loginBtn.querySelector('.btn-loader');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Показываем индикатор загрузки
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+                loginBtn.disabled = true;
+                
+                try {
+                    const result = await auth.login(email, password);
+                    
+                    if (result.success) {
+                        // Сохраняем "Запомнить меня"
+                        const remember = document.getElementById('remember').checked;
+                        if (remember) {
+                            localStorage.setItem('remember', 'true');
+                        }
+                        
+                        // Перенаправляем на dashboard
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        alert('Ошибка: ' + result.error);
+                        btnText.style.display = 'inline-block';
+                        btnLoader.style.display = 'none';
+                        loginBtn.disabled = false;
+                    }
+                } catch (error) {
+                    alert('Ошибка сети. Пожалуйста, попробуйте позже.');
+                    btnText.style.display = 'inline-block';
+                    btnLoader.style.display = 'none';
+                    loginBtn.disabled = false;
+                }
+            });
+
+            // Проверяем, если пользователь уже авторизован
+            auth.checkAuth().then(isAuthenticated => {
+                if (isAuthenticated) {
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

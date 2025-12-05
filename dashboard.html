@@ -1,4 +1,3 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,7 +12,9 @@
         <div class="container">
             <div class="logo-container">
                 <a href="index.html" aria-label="Перейти на главную страницу">
-                    <div class="logo-img">🍞</div>
+                    <div class="logo-placeholder">
+                        <img src="images/logo.jpg" alt="" class="logo-placeholder">
+                    </div>
                 </a>
                 <h1>Пекарня "Вкусный уголок"</h1>
             </div>
@@ -43,14 +44,9 @@
 
         <section class="user-info">
             <div class="container">
-                <div class="user-card">
-                    <div class="user-avatar">👤</div>
-                    <div class="user-details">
-                        <h2>Иван Иванов</h2>
-                        <p>ivan@example.com</p>
-                        <p class="member-since">Участник с января 2024</p>
-                    </div>
-                    <button class="btn btn-outline" id="logout-btn">Выйти</button>
+                <div class="user-card" id="user-card">
+                    <!-- Данные пользователя будут загружены через JavaScript -->
+                    <div class="loading">Загрузка информации...</div>
                 </div>
             </div>
         </section>
@@ -58,62 +54,9 @@
         <section class="dashboard-stats">
             <div class="container">
                 <h2>Статистика заказов</h2>
-                <div class="stats-grid">
-                    <div class="stat-card fade-in-up">
-                        <div class="stat-icon">📦</div>
-                        <div class="stat-content">
-                            <h3>Всего заказов</h3>
-                            <div class="stat-number">12</div>
-                            <div class="stat-change positive">+2 за месяц</div>
-                        </div>
-                    </div>
-                    <div class="stat-card fade-in-up">
-                        <div class="stat-icon">💰</div>
-                        <div class="stat-content">
-                            <h3>Общая сумма</h3>
-                            <div class="stat-number">8,540 ₽</div>
-                            <div class="stat-change positive">+1,200 ₽</div>
-                        </div>
-                    </div>
-                    <div class="stat-card fade-in-up">
-                        <div class="stat-icon">⭐</div>
-                        <div class="stat-content">
-                            <h3>Средний чек</h3>
-                            <div class="stat-number">712 ₽</div>
-                            <div class="stat-change positive">+5%</div>
-                        </div>
-                    </div>
-                    <div class="stat-card fade-in-up">
-                        <div class="stat-icon">🎂</div>
-                        <div class="stat-content">
-                            <h3>Любимый товар</h3>
-                            <div class="stat-number">Круассан</div>
-                            <div class="stat-change">5 покупок</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="charts-section">
-            <div class="container">
-                <div class="charts-grid">
-                    <div class="chart-card fade-in-up">
-                        <h3>Заказы по месяцам</h3>
-                        <canvas id="ordersChart"></canvas>
-                    </div>
-                    <div class="chart-card fade-in-up">
-                        <h3>Популярные категории</h3>
-                        <canvas id="categoriesChart"></canvas>
-                    </div>
-                    <div class="chart-card fade-in-up">
-                        <h3>Активность заказов</h3>
-                        <canvas id="activityChart"></canvas>
-                    </div>
-                    <div class="chart-card fade-in-up">
-                        <h3>Статусы заказов</h3>
-                        <canvas id="statusChart"></canvas>
-                    </div>
+                <div class="stats-grid" id="stats-grid">
+                    <!-- Статистика будет загружена через JavaScript -->
+                    <div class="loading">Загрузка статистики...</div>
                 </div>
             </div>
         </section>
@@ -152,17 +95,16 @@
                             </tr>
                         </thead>
                         <tbody id="ordersTableBody">
-                            <!-- Данные загружаются через JavaScript -->
+                            <!-- Заказы будут загружены через JavaScript -->
+                            <tr>
+                                <td colspan="6" class="loading">Загрузка заказов...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 
-                <div class="pagination">
-                    <button class="page-link prev" disabled>‹</button>
-                    <button class="page-link active">1</button>
-                    <button class="page-link">2</button>
-                    <button class="page-link">3</button>
-                    <button class="page-link next">›</button>
+                <div class="pagination" id="pagination">
+                    <!-- Пагинация будет добавлена через JavaScript -->
                 </div>
             </div>
         </section>
@@ -171,29 +113,29 @@
             <div class="container">
                 <h2>Быстрые действия</h2>
                 <div class="actions-grid">
-                    <div class="action-card fade-in-up">
+                    <div class="action-card">
                         <div class="action-icon">🔄</div>
                         <h3>Повторить заказ</h3>
                         <p>Быстро заказать предыдущие покупки</p>
-                        <button class="btn btn-outline">Выбрать</button>
+                        <button class="btn btn-outline" onclick="dashboard.repeatLastOrder()">Выбрать</button>
                     </div>
-                    <div class="action-card fade-in-up">
+                    <div class="action-card">
                         <div class="action-icon">❤️</div>
                         <h3>Избранное</h3>
                         <p>Ваши любимые товары</p>
-                        <button class="btn btn-outline">Просмотреть</button>
+                        <button class="btn btn-outline" onclick="dashboard.viewFavorites()">Просмотреть</button>
                     </div>
-                    <div class="action-card fade-in-up">
+                    <div class="action-card">
                         <div class="action-icon">📝</div>
                         <h3>Написать отзыв</h3>
                         <p>Поделитесь вашим мнением</p>
-                        <button class="btn btn-outline">Оставить отзыв</button>
+                        <button class="btn btn-outline" onclick="dashboard.writeReview()">Оставить отзыв</button>
                     </div>
-                    <div class="action-card fade-in-up">
+                    <div class="action-card">
                         <div class="action-icon">⚙️</div>
                         <h3>Настройки</h3>
                         <p>Управление профилем</p>
-                        <button class="btn btn-outline">Настроить</button>
+                        <button class="btn btn-outline" onclick="dashboard.openSettings()">Настроить</button>
                     </div>
                 </div>
             </div>
@@ -204,7 +146,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <div class="logo-img">🍞</div>
+                    <div class="logo-placeholder">🍞</div>
                     <p>Пекарня "Вкусный уголок"</p>
                     <p>Свежая выпечка с любовью с 2010 года</p>
                 </div>
@@ -236,12 +178,397 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Пекарня "Вкусный уголок". Все права защищены.</p>
+                <p>&copy; 2023 Пекарня "Вкусный уголок". Все права защищены.</p>
             </div>
         </div>
     </footer>
 
-    <script src="js/dashboard.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        class UserDashboard {
+            constructor() {
+                this.orders = [];
+                this.filteredOrders = [];
+                this.currentPage = 1;
+                this.itemsPerPage = 5;
+                this.init();
+            }
+
+            async init() {
+                // Проверяем авторизацию
+                const isAuthenticated = await auth.checkAuth();
+                if (!isAuthenticated) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Загружаем данные пользователя
+                await this.loadUserData();
+                
+                // Загружаем заказы
+                await this.loadOrders();
+                
+                // Загружаем статистику
+                await this.loadStats();
+                
+                // Инициализируем фильтры
+                this.initFilters();
+                
+                // Рендерим заказы
+                this.renderOrdersTable();
+            }
+
+            async loadUserData() {
+                const user = auth.getUser();
+                if (user) {
+                    const userCard = document.getElementById('user-card');
+                    const memberSince = new Date(user.created_at).toLocaleDateString('ru-RU', {
+                        year: 'numeric',
+                        month: 'long'
+                    });
+                    
+                    userCard.innerHTML = `
+                        <div class="user-avatar">${user.name.charAt(0)}</div>
+                        <div class="user-details">
+                            <h2>${user.name}</h2>
+                            <p>${user.email}</p>
+                            <p class="member-since">Участник с ${memberSince}</p>
+                        </div>
+                        <button class="btn btn-outline" onclick="auth.logout()">Выйти</button>
+                    `;
+                }
+            }
+
+            async loadOrders() {
+                try {
+                    const response = await api.getUserOrders();
+                    if (response.success && response.data) {
+                        this.orders = response.data.map(order => ({
+                            ...order,
+                            items: typeof order.items === 'string' ? JSON.parse(order.items) : order.items,
+                            date: order.created_at
+                        }));
+                        this.filteredOrders = [...this.orders];
+                    }
+                } catch (error) {
+                    console.error('Error loading orders:', error);
+                    this.showError('Не удалось загрузить заказы');
+                }
+            }
+
+            async loadStats() {
+                try {
+                    const response = await api.getUserStats();
+                    if (response.success && response.data) {
+                        const stats = response.data;
+                        this.renderStats(stats);
+                    }
+                } catch (error) {
+                    console.error('Error loading stats:', error);
+                }
+            }
+
+            renderStats(stats) {
+                const statsGrid = document.getElementById('stats-grid');
+                
+                const avgOrder = stats.totalOrders > 0 ? Math.round(stats.totalAmount / stats.totalOrders) : 0;
+                
+                statsGrid.innerHTML = `
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <h3>Всего заказов</h3>
+                            <div class="stat-number">${stats.totalOrders || 0}</div>
+                            <div class="stat-change positive">За все время</div>
+                        </div>
+                    </div>
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>Общая сумма</h3>
+                            <div class="stat-number">${Math.round(stats.totalAmount || 0)} ₽</div>
+                            <div class="stat-change positive">Всего потрачено</div>
+                        </div>
+                    </div>
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <h3>Средний чек</h3>
+                            <div class="stat-number">${avgOrder} ₽</div>
+                            <div class="stat-change positive">На один заказ</div>
+                        </div>
+                    </div>
+                    <div class="stat-card fade-in-up">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <h3>Активных заказов</h3>
+                            <div class="stat-number">
+                                ${(stats.statusStats?.find(s => s.status === 'processing')?.count || 0) + 
+                                  (stats.statusStats?.find(s => s.status === 'delivery')?.count || 0)}
+                            </div>
+                            <div class="stat-change">Требуют внимания</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            initFilters() {
+                document.getElementById('statusFilter').addEventListener('change', () => {
+                    this.filterOrders();
+                    this.renderOrdersTable();
+                });
+
+                document.getElementById('sortOrders').addEventListener('change', (e) => {
+                    this.sortOrders(e.target.value);
+                    this.renderOrdersTable();
+                });
+            }
+
+            filterOrders() {
+                const statusFilter = document.getElementById('statusFilter').value;
+                
+                if (statusFilter === 'all') {
+                    this.filteredOrders = [...this.orders];
+                } else {
+                    this.filteredOrders = this.orders.filter(order => order.status === statusFilter);
+                }
+                
+                this.currentPage = 1;
+            }
+
+            sortOrders(criteria) {
+                switch(criteria) {
+                    case 'date':
+                    case 'newest':
+                        this.filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        break;
+                    case 'oldest':
+                        this.filteredOrders.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        break;
+                    case 'price-high':
+                        this.filteredOrders.sort((a, b) => b.total_amount - a.total_amount);
+                        break;
+                    case 'price-low':
+                        this.filteredOrders.sort((a, b) => a.total_amount - b.total_amount);
+                        break;
+                }
+            }
+
+            renderOrdersTable() {
+                const tbody = document.getElementById('ordersTableBody');
+                
+                if (this.filteredOrders.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="no-orders">
+                                <div class="empty-state">
+                                    <div class="empty-icon">📦</div>
+                                    <h3>Заказов пока нет</h3>
+                                    <p>Совершите свой первый заказ в нашем каталоге</p>
+                                    <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                // Пагинация
+                const totalPages = Math.ceil(this.filteredOrders.length / this.itemsPerPage);
+                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+                const endIndex = startIndex + this.itemsPerPage;
+                const pageOrders = this.filteredOrders.slice(startIndex, endIndex);
+
+                // Рендеринг заказов
+                tbody.innerHTML = pageOrders.map(order => `
+                    <tr class="fade-in-up">
+                        <td>${this.formatDate(order.date)}</td>
+                        <td>#${order.id.toString().padStart(4, '0')}</td>
+                        <td>
+                            <div class="order-items">
+                                ${Array.isArray(order.items) ? 
+                                    order.items.map(item => `
+                                        <span class="order-item">
+                                            ${item.name}${item.quantity > 1 ? ` ×${item.quantity}` : ''}
+                                        </span>
+                                    `).join('') : 
+                                    '<span class="order-item">' + order.items + '</span>'
+                                }
+                            </div>
+                        </td>
+                        <td>${order.total_amount} ₽</td>
+                        <td>
+                            <span class="status-badge status-${order.status}">
+                                ${this.getStatusText(order.status)}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="dashboard.viewOrder(${order.id})">
+                                Подробнее
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                this.renderPagination(totalPages);
+            }
+
+            renderPagination(totalPages) {
+                const pagination = document.getElementById('pagination');
+                
+                if (totalPages <= 1) {
+                    pagination.innerHTML = '';
+                    return;
+                }
+
+                let paginationHTML = '';
+                
+                // Кнопка "Назад"
+                paginationHTML += `
+                    <button class="page-link prev ${this.currentPage === 1 ? 'disabled' : ''}" 
+                            ${this.currentPage === 1 ? 'disabled' : ''}
+                            onclick="dashboard.prevPage()">
+                        ‹
+                    </button>
+                `;
+
+                // Номера страниц
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
+                        paginationHTML += `
+                            <button class="page-link ${i === this.currentPage ? 'active' : ''}" 
+                                    onclick="dashboard.goToPage(${i})">
+                                ${i}
+                            </button>
+                        `;
+                    } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
+                        paginationHTML += '<span class="page-dots">...</span>';
+                    }
+                }
+
+                // Кнопка "Вперед"
+                paginationHTML += `
+                    <button class="page-link next ${this.currentPage === totalPages ? 'disabled' : ''}" 
+                            ${this.currentPage === totalPages ? 'disabled' : ''}
+                            onclick="dashboard.nextPage()">
+                        ›
+                    </button>
+                `;
+
+                pagination.innerHTML = paginationHTML;
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ru-RU');
+            }
+
+            getStatusText(status) {
+                const statusMap = {
+                    'completed': 'Завершен',
+                    'processing': 'В обработке',
+                    'delivery': 'Доставка',
+                    'cancelled': 'Отменен'
+                };
+                return statusMap[status] || status;
+            }
+
+            prevPage() {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    this.renderOrdersTable();
+                }
+            }
+
+            nextPage() {
+                const totalPages = Math.ceil(this.filteredOrders.length / this.itemsPerPage);
+                if (this.currentPage < totalPages) {
+                    this.currentPage++;
+                    this.renderOrdersTable();
+                }
+            }
+
+            goToPage(page) {
+                this.currentPage = page;
+                this.renderOrdersTable();
+            }
+
+            viewOrder(orderId) {
+                const order = this.orders.find(o => o.id === orderId);
+                if (order) {
+                    let itemsHTML = '';
+                    if (Array.isArray(order.items)) {
+                        itemsHTML = order.items.map(item => `
+                            <div class="order-detail-item">
+                                <strong>${item.name}</strong>
+                                <div>Количество: ${item.quantity}</div>
+                                <div>Цена: ${item.price} ₽</div>
+                            </div>
+                        `).join('');
+                    } else {
+                        itemsHTML = `<div class="order-detail-item">${order.items}</div>`;
+                    }
+                    
+                    alert(`
+                        Детали заказа #${order.id}
+                        Дата: ${this.formatDate(order.date)}
+                        Статус: ${this.getStatusText(order.status)}
+                        Общая сумма: ${order.total_amount} ₽
+                        
+                        Товары:
+                        ${itemsHTML}
+                    `);
+                }
+            }
+
+            repeatLastOrder() {
+                if (this.orders.length > 0) {
+                    const lastOrder = this.orders[0];
+                    if (confirm(`Повторить заказ от ${this.formatDate(lastOrder.date)} на сумму ${lastOrder.total_amount} ₽?`)) {
+                        // Здесь можно добавить логику повторного заказа
+                        alert('Заказ добавлен в корзину! Перейдите в корзину для оформления.');
+                    }
+                } else {
+                    alert('У вас пока нет заказов для повторения');
+                }
+            }
+
+            viewFavorites() {
+                alert('Раздел "Избранное" в разработке');
+            }
+
+            writeReview() {
+                alert('Написание отзыва - в разработке');
+            }
+
+            openSettings() {
+                alert('Настройки профиля - в разработке');
+            }
+
+            showError(message) {
+                const tbody = document.getElementById('ordersTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="error">
+                            <div class="error-state">
+                                <div class="error-icon">⚠️</div>
+                                <h3>Ошибка загрузки</h3>
+                                <p>${message}</p>
+                                <button class="btn btn-primary" onclick="dashboard.init()">Попробовать снова</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Инициализация dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            window.dashboard = new UserDashboard();
+        });
+    </script>
 </body>
 </html>
